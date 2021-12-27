@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SchematicCreator": {
+      "commandName": "Project",
+      "commandLineArgs": "result.txt"
+    }
+  }
+}

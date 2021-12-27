@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CompilerTest": {
+      "commandName": "Project",
+      "commandLineArgs": "language code.txt is.txt result.txt"
+    }
+  }
+}
