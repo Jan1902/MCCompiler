@@ -1,0 +1,10 @@
+//Fibonacci
+//Init
+a = 0
+b = 1
+
+//Loop
+:loop
+a = a + b
+b = a + b
+jump(loop)
