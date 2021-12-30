@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.InstructionSet
@@ -11,23 +12,21 @@ namespace CompilerTest.Compiling.InstructionSet
     public class SimpleInstructionSet : IInstructionSet
     {
         public ICollection<Instruction> Instructions { get; set; }
+        public ICollection<Condition> Conditions { get; set; }
 
         public SimpleInstructionSet(string content)
         {
-            Load(content);
+            LoadInstructions(content);
+            LoadConditions(content);
         }
 
-        public SimpleInstructionSet()
+        private void LoadInstructions(string content)
         {
-
-        }
-
-        public void Load(string content)
-        {
+            var instructionsContent = Regex.Match(content, @"(?<=-Instructions(\r\n|\n))([\s\S]*?)(?=(\r\n|\n)-)").Value;
             Instructions = new List<Instruction>();
-            var lines = content.SplitLines();
+            var lines = instructionsContent.SplitLines().ToList();
 
-            foreach (var line in lines.Skip(1))
+            foreach (var line in lines)
             {
                 var parts = line.Split(" ");
                 var instruction = new Instruction();
@@ -35,17 +34,31 @@ namespace CompilerTest.Compiling.InstructionSet
                 instruction.Name = parts[1];
 
                 if (parts.Length > 2)
-                {
                     instruction.Translation = parts[2];
-                }
 
                 Instructions.Add(instruction);
             }
         }
 
-        public Instruction GetInstructionByName(string name)
+        private void LoadConditions(string content)
         {
-            return Instructions.FirstOrDefault(i => i.Name == name);
+            var conditionsContent = Regex.Match(content, @"(?<=-Conditions(\r\n|\n))([\s\S]*?)(?=(\r\n|\n)-)").Value;
+            Conditions = new List<Condition>();
+            var lines = conditionsContent.SplitLines().ToList();
+
+            foreach (var line in lines)
+            {
+                var parts = line.Split(" ");
+                var condition = new Condition();
+                condition.OPCode = int.Parse(parts[0]);
+                condition.Name = parts[1];
+
+                Conditions.Add(condition);
+            }
         }
+
+        public Instruction GetInstructionByName(string name) => Instructions.FirstOrDefault(i => i.Name == name);
+
+        public Condition GetConditionByName(string name) => Conditions.FirstOrDefault(i => i.Name == name);
     }
 }

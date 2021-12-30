@@ -12,13 +12,5 @@ namespace CompilerTest.Other
         {
             return text.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         }
-
-        public static string ReplaceMany(this string text, Dictionary<string, string> parts)
-        {
-            foreach (var part in parts)
-                text = text.Replace(part.Key, part.Value);
-
-            return text;
-        }
     }
 }

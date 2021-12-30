@@ -23,8 +23,6 @@
   </p>
 </div>
 
-
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -51,16 +49,10 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
 Over time Minecraft CPUs have grown bigger and more powerful - to a point where you're able to play games like Pong and Tetris on them. Unfortunately inputting such big programs by hand is a pain. This project is supposed to make this process a lot easier by providing an easy-to-use programming language aswell as a program for generating customizable schematics from your code.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 ### Built With
 
@@ -68,8 +60,7 @@ _The project is pretty much made from scratch besides some ease-of-life librarie
 
 * [.NET](https://dotnet.microsoft.com/en-us/)
 * [fNBT](https://github.com/mstefarov/fNbt)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+* [CommandLineParser](https://github.com/commandlineparser/commandline)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -91,9 +82,6 @@ _Installing the project only requires you to clone the repo and open it up in VS
 
 2. Open it up in VS 2022
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
@@ -101,9 +89,9 @@ _Both the compiler and the Schematic Generator are operated through the command 
 
 ### Compiler
 #### Syntax
-	CompilerTest.exe <language/simple> <CODE-FILE> <INSTRUCTION-SET-FILE> <OUTPUT-FILE>
+	CompilerTest.exe -c <CODE-FILE> -i <INSTRUCTION-SET-FILE> -o <OUTPUT-FILE>
 #### Example
-    CompilerTest.exe language code.txt is.txt result.txt
+    CompilerTest.exe -c code.txt -i is.txt -o result.txt
     
 ### Schematic Generator
 #### Syntax
@@ -111,28 +99,26 @@ _Both the compiler and the Schematic Generator are operated through the command 
 #### Example
     SchematicGenerator.exe result.txt
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Create proper version of the Schematic Generator
-	- [ ] Configuration
-	- [ ] Command Line Parser
 - [x] Compiler
 	- [x] Loading Instruction Sets
-	- [x] Compiling code into binary
+	- [x] Tokenizer
+    - [x] Parser
+        - [ ] Better Syntax Error Recognition
+    - [ ] Support different CPU architectures
+    - [x] Transformer
+    - [x] Translator
+        - [ ] Handling nested calculations
+    - [x] Proper CLI
 	- [ ] Automatically move variables between ram and registers
-	- [ ] Adding all the necessary commands
+    - [ ] Automatically create temporary variables when needed
+- [ ] Schematic Generator
+	- [ ] Configuration
 	- [ ] Command Line Parser
 
 See the [open issues](https://github.com/Jan1902/MCCompiler/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -148,18 +134,10 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- CONTACT -->
 ## Contact
@@ -167,5 +145,3 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 Jan-Hendrik Heinbokel - jan.heinbokel@gmx.de
 
 Project Link: [https://github.com/Jan1902/MCCompiler](https://github.com/Jan1902/MCCompiler)
-
-<p align="right">(<a href="#top">back to top</a>)</p>

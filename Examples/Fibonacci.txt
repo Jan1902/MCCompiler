@@ -1,10 +1,15 @@
 //Fibonacci
+
 //Init
 a = 0
 b = 1
+max = 233
 
 //Loop
-:loop
-a = a + b
-b = a + b
-jump(loop)
+while(a < max)
+{
+  a = a + b
+  b = a + b
+}
+
+halt()

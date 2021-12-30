@@ -1,0 +1,57 @@
+//Bresenham
+
+//IO:
+//0: xStart
+//1: yStart
+//2: xEnd
+//3: yEnd
+
+//4: displayX
+//5: displayY
+
+//Used because you currently can't compare a variable to a number directly
+zero = 0
+
+//Input Coordinates
+xStart = input(0)
+yStart = input(1)
+xEnd = input(2)
+yEnd = input(3)
+
+//Deltas
+dx = xEnd - xStart
+dy = yEnd - yStart
+
+//Init X/Y
+x = xStart
+y = yStart
+
+//Draw Pixel
+output(4, x)
+output(5, y)
+
+//Init Error
+error = dx >>
+
+//Loop while x < xEnd
+while (x < xEnd) {
+  //Increment x
+  x = x++
+
+  error = error - dy
+
+  //If error is bigger than or equal to 0 increment y and reset error
+  if(error >= zero)
+  {
+    //Increment Y
+    y = y++
+
+    error = error + dx
+  }
+
+  //Draw Pixel
+  output(4, x)
+  output(5, y)
+}
+
+halt()
