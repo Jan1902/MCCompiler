@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompilerTest.Other
+namespace CompilerTest.Utility
 {
     public static class Extensions
     {

@@ -1,7 +1,9 @@
-﻿namespace CompilerTest.Compiling.Parsing
+﻿using CompilerTest.Compiling.Tokenizing;
+
+namespace CompilerTest.Compiling.Parsing
 {
     internal interface IParser
     {
-        Node Parse();
+        Node Parse(Token[] tokens);
     }
 }

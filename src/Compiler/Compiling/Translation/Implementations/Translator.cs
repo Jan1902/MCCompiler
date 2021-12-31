@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace CompilerTest.Compiling.Translation
+namespace CompilerTest.Compiling.Translation.Implementations
 {
     internal class Translator : ITranslator
     {
@@ -26,7 +26,7 @@ namespace CompilerTest.Compiling.Translation
             foreach (var rawInstruction in instructions)
             {
                 // Grab Instruction by name
-                var instruction = _instructionSet.GetInstructionByName(rawInstruction.Operation);
+                var instruction = _instructionSet.GetInstruction(rawInstruction.Operation);
 
                 // Unknown Instruction
                 if (instruction == null)
@@ -52,9 +52,9 @@ namespace CompilerTest.Compiling.Translation
                     .Select(m => m.Value)
                     .ToArray();
 
-                if (rawInstruction.Operation == "JC")
+                if (rawInstruction.Operation == Operations.Branch)
                 {
-                    var condition = _instructionSet.GetConditionByName((string)rawInstruction.Parameters[0]);
+                    var condition = _instructionSet.GetCondition((Conditions)rawInstruction.Parameters[0]);
 
                     // Unknown Condition
                     if (condition == null)

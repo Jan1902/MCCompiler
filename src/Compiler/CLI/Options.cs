@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompilerTest.Other
+namespace CompilerTest.CLI
 {
     internal class Options
     {
@@ -17,5 +17,8 @@ namespace CompilerTest.Other
 
         [Option('i', "instructionset-file", Required = true, HelpText = "The name of the instruction set file.")]
         public string InstructionSetFile { get; set; }
+
+        [Option('f', "config-file", Required = true, HelpText = "The name of the config file.")]
+        public string ConfigFile { get; set; }
     }
 }

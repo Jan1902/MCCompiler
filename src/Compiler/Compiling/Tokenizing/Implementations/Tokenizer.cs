@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace CompilerTest.Compiling.Tokenizing
+namespace CompilerTest.Compiling.Tokenizing.Implementations
 {
     internal class Tokenizer : ITokenizer
     {

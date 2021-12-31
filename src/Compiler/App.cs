@@ -1,7 +1,8 @@
 ﻿using CommandLine;
+using CompilerTest.CLI;
 using CompilerTest.Compiling;
 using CompilerTest.Compiling.InstructionSet;
-using CompilerTest.Other;
+using CompilerTest.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,14 @@ namespace CompilerTest
     internal class App
     {
         private readonly ILogger<App> _logger;
+        private readonly IConfigurationManager _configManager;
+        private readonly IComponentProvider _componentProvider;
 
-        public App(ILogger<App> logger)
+        public App(ILogger<App> logger, IConfigurationManager configManager, IComponentProvider componentProvider)
         {
             _logger = logger;
+            _configManager = configManager;
+            _componentProvider = componentProvider;
         }
 
         public void Run(string[] args)
@@ -28,6 +33,9 @@ namespace CompilerTest
 
             if (options == null)
                 return;
+
+            //Config
+            _configManager.Load(options.ConfigFile);
 
             _logger.LogInformation("");
             _logger.LogInformation("Compiler started");
@@ -48,9 +56,7 @@ namespace CompilerTest
             // Instruction Set
             _logger.LogInformation("Loading Instruction Set from file '{0}'", options.InstructionSetFile);
 
-            var instructionSet = InstructionSetProvider.LoadInstructionSet(File.ReadAllText(options.InstructionSetFile));
-
-            _logger.LogInformation("Successfully loaded Instruction Set with {0} instructions and {1} conditions", instructionSet.Instructions.Count, instructionSet.Conditions.Count);
+            _logger.LogInformation("Successfully loaded Instruction Set with {0} instructions and {1} conditions", _configManager.Configuration.InstructionSet.Instructions.Count, _configManager.Configuration.InstructionSet.Conditions.Count);
 
             // Code
             _logger.LogInformation("Compiling file '{0}'", options.CodeFile);
@@ -58,7 +64,7 @@ namespace CompilerTest
             var sourceCode = File.ReadAllText(options.CodeFile);
 
             // Compiling
-            var compiler = new Compiler(instructionSet);
+            var compiler = _componentProvider.Compiler;
             string[] result = null;
 
             //result = compiler.Compile(sourceCode);

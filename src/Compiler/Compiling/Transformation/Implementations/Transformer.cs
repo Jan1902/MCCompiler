@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompilerTest.Compiling.Transformation
+namespace CompilerTest.Compiling.Transformation.Implementations
 {
     internal class Transformer : ITransformer
     {
@@ -14,10 +14,10 @@ namespace CompilerTest.Compiling.Transformation
 
         private readonly List<RawInstruction> result;
 
-        public Transformer(CompilationEnvironment environment)
+        public Transformer()
         {
-            _environment = environment;
             result = new List<RawInstruction>();
+            _environment = new CompilationEnvironment();
         }
 
         public List<RawInstruction> Transform(Node node)
@@ -30,18 +30,18 @@ namespace CompilerTest.Compiling.Transformation
                     {
                         var variable = _environment.GetOrCreateVariable(node.Children[0].Value);
                         if (node.Children[1].Type == NodeType.Value)
-                            result.Add(new RawInstruction("LDI", variable.Address, int.Parse(node.Children[1].Value)));
+                            result.Add(new RawInstruction(Operations.LoadImmediate, variable.Address, int.Parse(node.Children[1].Value)));
 
                         else if (node.Children[1].Type == NodeType.Increment)
                         {
                             var sourceVariable = _environment.GetVariableByName(node.Children[1].Value);
-                            result.Add(new RawInstruction("INC", variable.Address, sourceVariable.Address));
+                            result.Add(new RawInstruction(Operations.Increment, variable.Address, sourceVariable.Address));
                         }
 
                         else if (node.Children[1].Type == NodeType.Shift)
                         {
                             var sourceVariable = _environment.GetVariableByName(node.Children[1].Children[0].Value);
-                            result.Add(new RawInstruction(node.Children[1].Children[1].Value == ">" ? "RSH" : "LSH", variable.Address, sourceVariable.Address));
+                            result.Add(new RawInstruction(node.Children[1].Children[1].Value == ">" ? Operations.ShiftRight : Operations.ShiftLeft, variable.Address, sourceVariable.Address));
                         }
 
                         else if ((node.Children[1].Type == NodeType.Addition
@@ -51,12 +51,12 @@ namespace CompilerTest.Compiling.Transformation
                             var aVariable = _environment.GetVariableByName(node.Children[1].Children[0].Value);
                             var bVariable = _environment.GetVariableByName(node.Children[1].Children[1].Value);
 
-                            result.Add(new RawInstruction(node.Children[1].Type == NodeType.Addition ? "ADD" : "SUB", variable.Address, aVariable.Address, bVariable.Address));
+                            result.Add(new RawInstruction(node.Children[1].Type == NodeType.Addition ? Operations.Add : Operations.Subtract, variable.Address, aVariable.Address, bVariable.Address));
                         }
 
                         else if (node.Children[1].Type == NodeType.Input)
                         {
-                            result.Add(new RawInstruction("PLD", variable.Address, int.Parse(node.Children[1].Children[0].Value)));
+                            result.Add(new RawInstruction(Operations.PortLoad, variable.Address, int.Parse(node.Children[1].Children[0].Value)));
                         }
                         break;
                     }
@@ -64,7 +64,7 @@ namespace CompilerTest.Compiling.Transformation
                 case NodeType.Output:
                     {
                         var sourceVariable = _environment.GetVariableByName(node.Children[1].Value);
-                        result.Add(new RawInstruction("PST", int.Parse(node.Children[0].Value), sourceVariable.Address));
+                        result.Add(new RawInstruction(Operations.PortStore, int.Parse(node.Children[0].Value), sourceVariable.Address));
                     }
                     break;
 
@@ -91,11 +91,11 @@ namespace CompilerTest.Compiling.Transformation
 
                     TranslateCondition(loopBlockStart);
 
-                    result.Add(new RawInstruction("JC", "NC", loopBlockStart));
+                    result.Add(new RawInstruction(Operations.Branch, Conditions.NoCondition, loopBlockStart));
                     break;
 
                 case NodeType.Halt:
-                    result.Add(new RawInstruction("HLT"));
+                    result.Add(new RawInstruction(Operations.Halt));
                     break;
 
                 default:
@@ -110,21 +110,24 @@ namespace CompilerTest.Compiling.Transformation
                 if (node.Children[0].Children[1].Value == ">="
                     || node.Children[0].Children[1].Value == "<"
                     || node.Children[0].Children[1].Value == "==")
-                    result.Insert(blockStart, new RawInstruction("SUB",
+                    result.Insert(blockStart, new RawInstruction(Operations.Subtract,
                         0, aVariable.Address, bVariable.Address));
                 else
-                    result.Insert(blockStart, new RawInstruction("SUB",
+                    result.Insert(blockStart, new RawInstruction(Operations.Subtract,
                         0, bVariable.Address, aVariable.Address));
 
                 if (node.Children[0].Children[1].Value == ">"
                     || node.Children[0].Children[1].Value == "<")
-                    result.Insert(blockStart + 1, new RawInstruction("JC", "COUT", result.Count + 1));
+                    result.Insert(blockStart + 1, new RawInstruction(Operations.Branch, Conditions.CarryOut, result.Count + 1));
                 else if (node.Children[0].Children[1].Value == ">="
                     || node.Children[0].Children[1].Value == "<=")
-                    result.Insert(blockStart + 1, new RawInstruction("JC", "!COUT", result.Count + 1));
+                    result.Insert(blockStart + 1, new RawInstruction(Operations.Branch, Conditions.NoCarryOut, result.Count + 1));
                 else
-                    result.Insert(blockStart + 1, new RawInstruction("JC", "!ZERO", result.Count + 1));
+                    result.Insert(blockStart + 1, new RawInstruction(Operations.Branch, Conditions.NotZero, result.Count + 1));
             }
+
+            if (node.Type == NodeType.Program)
+                result.Add(new RawInstruction(Operations.Halt));
 
             return result;
         }

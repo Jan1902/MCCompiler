@@ -1,6 +1,6 @@
-﻿namespace CompilerTest.Other.Logging
+﻿namespace CompilerTest.Logging.Implementations
 {
-    public interface ILogger
+    internal interface ILoggerImplementation
     {
         void LogError(string text, params object[] args);
         void LogInfo(string text, params object[] args);

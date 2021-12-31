@@ -1,6 +1,6 @@
 ﻿using CompilerTest.Compiling;
 using CompilerTest.Compiling.InstructionSet;
-using CompilerTest.Other.Logging;
+using CompilerTest.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,6 +32,8 @@ namespace CompilerTest
                 });
             });
 
+            services.AddSingleton<IConfigurationManager, Configuration.ConfigurationManager>();
+            services.AddSingleton<IComponentProvider, ComponentProvider>();
             services.AddTransient<App>();
         }
     }

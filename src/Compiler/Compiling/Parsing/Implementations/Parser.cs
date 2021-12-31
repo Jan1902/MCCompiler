@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompilerTest.Compiling.Parsing
+namespace CompilerTest.Compiling.Parsing.Implementations
 {
     internal class Parser : IParser
     {
@@ -14,13 +14,7 @@ namespace CompilerTest.Compiling.Parsing
 
         private Node ast;
 
-        private readonly Token[] _tokens;
-
-        public Parser(Token[] tokens)
-        {
-            _tokens = tokens;
-            token = _tokens[0];
-        }
+        private Token[] _tokens;
 
         private Exception Error(Token token, string message, params object[] values)
         {
@@ -62,8 +56,11 @@ namespace CompilerTest.Compiling.Parsing
                 throw Error(token, "Used unassigned variable '{0}'", token.Content);
         }
 
-        public Node Parse()
+        public Node Parse(Token[] tokens)
         {
+            _tokens = tokens;
+            token = _tokens[0];
+
             ast = new Node(NodeType.Program, null);
 
             while (current < _tokens.Length)

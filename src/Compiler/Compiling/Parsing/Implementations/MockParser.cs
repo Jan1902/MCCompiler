@@ -1,14 +1,15 @@
-﻿using System;
+﻿using CompilerTest.Compiling.Tokenizing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompilerTest.Compiling.Parsing
+namespace CompilerTest.Compiling.Parsing.Implementations
 {
     internal class MockParser : IParser
     {
-        public Node Parse()
+        public Node Parse(Token[] tokens)
         {
             var ast = new Node(NodeType.Program);
 

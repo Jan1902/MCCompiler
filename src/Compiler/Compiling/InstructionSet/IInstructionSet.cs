@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CompilerTest.Compiling.Transformation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace CompilerTest.Compiling.InstructionSet
     {
         ICollection<Instruction> Instructions { get; set; }
         ICollection<Condition> Conditions { get; set; }
-        Instruction GetInstructionByName(string name);
-        Condition GetConditionByName(string name);
+        Instruction GetInstruction(Operations name);
+        Condition GetCondition(Conditions name);
     }
 }

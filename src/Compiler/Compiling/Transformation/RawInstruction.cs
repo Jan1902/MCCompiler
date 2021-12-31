@@ -8,10 +8,10 @@ namespace CompilerTest.Compiling.Transformation
 {
     internal class RawInstruction
     {
-        public string Operation { get; set; }
+        public Operations Operation { get; set; }
         public List<object> Parameters { get; set; }
 
-        public RawInstruction(string operation, params object[] parameters)
+        public RawInstruction(Operations operation, params object[] parameters)
         {
             Operation = operation;
             Parameters = parameters.ToList();

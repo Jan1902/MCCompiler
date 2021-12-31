@@ -1,11 +1,11 @@
-﻿using CompilerTest.Other.Logging.Implementations;
+﻿using CompilerTest.Logging.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompilerTest.Other.Logging
+namespace CompilerTest.Logging
 {
     public class Logger : ILogger
     {

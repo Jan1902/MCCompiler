@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompilerTest.Other.Logging.Implementations
+namespace CompilerTest.Logging.Implementations
 {
     internal class FileLogger : ILoggerImplementation
     {
