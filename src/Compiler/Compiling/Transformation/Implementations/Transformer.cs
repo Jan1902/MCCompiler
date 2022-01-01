@@ -30,18 +30,18 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                     {
                         var variable = _environment.GetOrCreateVariable(node.Children[0].Value);
                         if (node.Children[1].Type == NodeType.Value)
-                            result.Add(new RawInstruction(Operations.LoadImmediate, variable.Address, int.Parse(node.Children[1].Value)));
+                            result.Add(new RawInstruction(Operations.LoadImmediate, variable.RegisterAddress, int.Parse(node.Children[1].Value)));
 
                         else if (node.Children[1].Type == NodeType.Increment)
                         {
                             var sourceVariable = _environment.GetVariableByName(node.Children[1].Value);
-                            result.Add(new RawInstruction(Operations.Increment, variable.Address, sourceVariable.Address));
+                            result.Add(new RawInstruction(Operations.Increment, variable.RegisterAddress, sourceVariable.RegisterAddress));
                         }
 
                         else if (node.Children[1].Type == NodeType.Shift)
                         {
                             var sourceVariable = _environment.GetVariableByName(node.Children[1].Children[0].Value);
-                            result.Add(new RawInstruction(node.Children[1].Children[1].Value == ">" ? Operations.ShiftRight : Operations.ShiftLeft, variable.Address, sourceVariable.Address));
+                            result.Add(new RawInstruction(node.Children[1].Children[1].Value == ">" ? Operations.ShiftRight : Operations.ShiftLeft, variable.RegisterAddress, sourceVariable.RegisterAddress));
                         }
 
                         else if ((node.Children[1].Type == NodeType.Addition
@@ -51,12 +51,12 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                             var aVariable = _environment.GetVariableByName(node.Children[1].Children[0].Value);
                             var bVariable = _environment.GetVariableByName(node.Children[1].Children[1].Value);
 
-                            result.Add(new RawInstruction(node.Children[1].Type == NodeType.Addition ? Operations.Add : Operations.Subtract, variable.Address, aVariable.Address, bVariable.Address));
+                            result.Add(new RawInstruction(node.Children[1].Type == NodeType.Addition ? Operations.Add : Operations.Subtract, variable.RegisterAddress, aVariable.RegisterAddress, bVariable.RegisterAddress));
                         }
 
                         else if (node.Children[1].Type == NodeType.Input)
                         {
-                            result.Add(new RawInstruction(Operations.PortLoad, variable.Address, int.Parse(node.Children[1].Children[0].Value)));
+                            result.Add(new RawInstruction(Operations.PortLoad, variable.RegisterAddress, int.Parse(node.Children[1].Children[0].Value)));
                         }
                         break;
                     }
@@ -64,7 +64,7 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                 case NodeType.Output:
                     {
                         var sourceVariable = _environment.GetVariableByName(node.Children[1].Value);
-                        result.Add(new RawInstruction(Operations.PortStore, int.Parse(node.Children[0].Value), sourceVariable.Address));
+                        result.Add(new RawInstruction(Operations.PortStore, int.Parse(node.Children[0].Value), sourceVariable.RegisterAddress));
                     }
                     break;
 
@@ -91,7 +91,7 @@ namespace CompilerTest.Compiling.Transformation.Implementations
 
                     TranslateCondition(loopBlockStart);
 
-                    result.Add(new RawInstruction(Operations.Branch, Conditions.NoCondition, loopBlockStart));
+                    result.Add(new RawInstruction(Operations.Branch, Conditions.NoCondition, loopBlockStart)); //somehow get the start of the block for this without global variable
                     break;
 
                 case NodeType.Halt:
@@ -111,10 +111,10 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                     || node.Children[0].Children[1].Value == "<"
                     || node.Children[0].Children[1].Value == "==")
                     result.Insert(blockStart, new RawInstruction(Operations.Subtract,
-                        0, aVariable.Address, bVariable.Address));
+                        0, aVariable.RegisterAddress, bVariable.RegisterAddress));
                 else
                     result.Insert(blockStart, new RawInstruction(Operations.Subtract,
-                        0, bVariable.Address, aVariable.Address));
+                        0, bVariable.RegisterAddress, aVariable.RegisterAddress));
 
                 if (node.Children[0].Children[1].Value == ">"
                     || node.Children[0].Children[1].Value == "<")

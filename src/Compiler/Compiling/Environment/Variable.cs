@@ -11,13 +11,13 @@ namespace CompilerTest.Compiling.Environment
         public string Name { get; set; }
         public int Value { get; set; }
         public bool ReadOnly { get; set; }
-        public int Address { get; set; }
+        public int RegisterAddress { get; set; }
 
         public Variable(string name, bool readOnly, int address)
         {
             Name = name;
             ReadOnly = readOnly;
-            Address = address;
+            RegisterAddress = address;
         }
 
         public Variable(string name, int value, bool readOnly)

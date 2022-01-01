@@ -7,6 +7,7 @@ using CompilerTest.Compiling.Transformation;
 using CompilerTest.Compiling.Transformation.Implementations;
 using CompilerTest.Compiling.Translation;
 using CompilerTest.Compiling.Translation.Implementations;
+using CompilerTest.Components;
 using CompilerTest.Configuration;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompilerTest
+namespace CompilerTest.Components.Implementations
 {
     internal class ComponentProvider : IComponentProvider
     {

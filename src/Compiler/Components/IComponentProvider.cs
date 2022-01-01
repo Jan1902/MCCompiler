@@ -4,7 +4,7 @@ using CompilerTest.Compiling.Tokenizing;
 using CompilerTest.Compiling.Transformation;
 using CompilerTest.Compiling.Translation;
 
-namespace CompilerTest
+namespace CompilerTest.Components
 {
     internal interface IComponentProvider
     {

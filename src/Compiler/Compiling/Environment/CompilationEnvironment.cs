@@ -46,7 +46,7 @@ namespace CompilerTest.Compiling.Environment
                 new Variable(name,
                     false,
                     CustomVariables.Any()
-                        ? CustomVariables.Max(v => v.Address) + 1
+                        ? CustomVariables.Max(v => v.RegisterAddress) + 1
                         : 1);
 
             CustomVariables.Add(variable);

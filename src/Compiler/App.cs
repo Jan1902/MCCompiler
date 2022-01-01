@@ -2,6 +2,7 @@
 using CompilerTest.CLI;
 using CompilerTest.Compiling;
 using CompilerTest.Compiling.InstructionSet;
+using CompilerTest.Components;
 using CompilerTest.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
