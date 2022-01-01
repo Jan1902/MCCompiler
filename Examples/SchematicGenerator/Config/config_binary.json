@@ -1,0 +1,12 @@
+{
+	"Type":"Binary",
+	"SpacingX":8,
+	"SpacingY":2,
+	"SpacingZ":2,
+	"CellsPerBlockOrPage":16,
+	"BlockOrPageCount":6,
+	"AlternatingHeight":false,
+	"InstructionSize":16,
+	"OnMaterial":"minecraft:redstone_block",
+	"OffMaterial":"minecraft:smooth_quartz"
+}

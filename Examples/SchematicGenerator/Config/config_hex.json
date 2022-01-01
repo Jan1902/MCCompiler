@@ -1,0 +1,12 @@
+{
+	"Type":"Hex",
+	"SpacingX":2,
+	"SpacingY":2,
+	"SpacingZ":2,
+	"CellsPerBlockOrPage":16,
+	"BlockOrPageCount":4,
+	"AlternatingHeight":true,
+	"InstructionSize":16,
+	"OnMaterial":"minecraft:barrel",
+	"OffMaterial":"minecraft:redstone_block"
+}
