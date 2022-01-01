@@ -95,9 +95,9 @@ _Both the compiler and the Schematic Generator are operated through the command 
     
 ### Schematic Generator
 #### Syntax
-	SchematicGenerator.exe <BINARY-FILE>
+	SchematicGenerator.exe <BINARY-FILE> <CONFIG-FILE>
 #### Example
-    SchematicGenerator.exe result.txt
+    SchematicGenerator.exe result.txt config.json
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -112,10 +112,10 @@ _Both the compiler and the Schematic Generator are operated through the command 
     - [x] Translator
         - [ ] Handling nested calculations
     - [x] Proper CLI
-	- [ ] Automatically move variables between ram and registers
+    - [ ] Register Allocation
     - [ ] Automatically create temporary variables when needed
-- [ ] Schematic Generator
-	- [ ] Configuration
+- [X] Schematic Generator
+	- [X] Configuration
 	- [ ] Command Line Parser
 
 See the [open issues](https://github.com/Jan1902/MCCompiler/issues) for a full list of proposed features (and known issues).
