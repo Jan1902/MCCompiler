@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicCreator": {
       "commandName": "Project",
-      "commandLineArgs": "result.txt"
+      "commandLineArgs": "result.txt config.json"
     }
   }
 }
