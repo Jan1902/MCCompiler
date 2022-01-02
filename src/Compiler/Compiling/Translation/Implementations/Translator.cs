@@ -19,9 +19,25 @@ namespace CompilerTest.Compiling.Translation.Implementations
             _instructionSet = instructionSet;
         }
 
-        public string[] Translate(RawInstruction[] instructions)
+        public string[] Translate(List<IntermediateInstruction> instructions)
         {
             var output = new List<string>();
+
+            // Resolve Jumps
+            for (int l = instructions.Count - 1; l >= 0; l--)
+            {
+                var instruction = instructions[l];
+
+                if(instruction.Operation == Operations.Branch)
+                {
+                    if (instruction.Parameters[1] is not string)
+                        continue;
+
+                    var target = instructions.FirstOrDefault(i => i.Operation == Operations.Label && (string)i.Parameters[0] == (string)instruction.Parameters[1]);
+                    instruction.Parameters[1] = instructions.IndexOf(target);
+                    instructions.RemoveAt(instructions.IndexOf(target));
+                }
+            }
 
             foreach (var rawInstruction in instructions)
             {

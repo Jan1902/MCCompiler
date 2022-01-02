@@ -12,6 +12,7 @@ namespace CompilerTest.Compiling.Environment
         public int Value { get; set; }
         public bool ReadOnly { get; set; }
         public int RegisterAddress { get; set; }
+        public int RAMAddress { get; set; }
 
         public Variable(string name, bool readOnly, int address)
         {
@@ -30,6 +31,17 @@ namespace CompilerTest.Compiling.Environment
         public Variable()
         {
 
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj == null)
+                return false;
+
+            if(obj.GetType() != typeof(Variable))
+                return false;
+
+            return ((Variable)obj).Name == Name;
         }
     }
 }

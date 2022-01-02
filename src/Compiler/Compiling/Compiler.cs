@@ -21,12 +21,10 @@ namespace CompilerTest.Compiling
 {
     internal class Compiler : ICompiler
     {
-        private readonly CPUConfiguration _cpuConfiguration;
         private readonly IComponentProvider _componentProvider;
 
-        public Compiler(CPUConfiguration cpuConfiguration, IComponentProvider componentProvider)
+        public Compiler(IComponentProvider componentProvider)
         {
-            _cpuConfiguration = cpuConfiguration;
             _componentProvider = componentProvider;
         }
 
@@ -41,7 +39,10 @@ namespace CompilerTest.Compiling
             var ast = parser.Parse(tokens);
 
             ITransformer transformer = _componentProvider.Transformer;
-            var instructions = transformer.Transform(ast).ToArray();
+            var instructions = transformer.Transform(ast);
+
+            var registerAllocator = new RegisterAllocator();
+            instructions = registerAllocator.AllocateRegisters(instructions).ToList();
 
             ITranslator translator = _componentProvider.Translator;
             var output = translator.Translate(instructions);

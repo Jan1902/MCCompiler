@@ -68,16 +68,16 @@ namespace CompilerTest
             var compiler = _componentProvider.Compiler;
             string[] result = null;
 
-            //result = compiler.Compile(sourceCode);
-            try
-            {
-                result = compiler.Compile(sourceCode);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Compiler Error: " + ex.Message);
-                return;
-            }
+            result = compiler.Compile(sourceCode);
+            //try
+            //{
+            //    result = compiler.Compile(sourceCode);
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError("Compiler Error: " + ex.Message);
+            //    return;
+            //}
 
             _logger.LogInformation("Done");
 

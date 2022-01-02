@@ -22,6 +22,7 @@ namespace CompilerTest.Compiling.Transformation
         LoadImmediate,
         AddImmediate,
         Branch,
+        Label,
         Halt
     }
 }

@@ -5,6 +5,6 @@ namespace CompilerTest.Compiling.Transformation
 {
     internal interface ITransformer
     {
-        List<RawInstruction> Transform(Node node);
+        List<IntermediateInstruction> Transform(Node node);
     }
 }

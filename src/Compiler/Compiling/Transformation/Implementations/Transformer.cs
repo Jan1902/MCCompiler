@@ -12,17 +12,19 @@ namespace CompilerTest.Compiling.Transformation.Implementations
     {
         private readonly CompilationEnvironment _environment;
 
-        private readonly List<RawInstruction> result;
+        private readonly List<IntermediateInstruction> result;
+
+        private int labelIndex;
 
         public Transformer()
         {
-            result = new List<RawInstruction>();
+            result = new List<IntermediateInstruction>();
             _environment = new CompilationEnvironment();
         }
 
-        public List<RawInstruction> Transform(Node node)
+        public List<IntermediateInstruction> Transform(Node node)
         {
-            var result = new List<RawInstruction>();
+            var result = new List<IntermediateInstruction>();
 
             switch (node.Type)
             {
@@ -30,18 +32,18 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                     {
                         var variable = _environment.GetOrCreateVariable(node.Children[0].Value);
                         if (node.Children[1].Type == NodeType.Value)
-                            result.Add(new RawInstruction(Operations.LoadImmediate, variable.RegisterAddress, int.Parse(node.Children[1].Value)));
+                            result.Add(new IntermediateInstruction(Operations.LoadImmediate, variable, int.Parse(node.Children[1].Value)));
 
                         else if (node.Children[1].Type == NodeType.Increment)
                         {
                             var sourceVariable = _environment.GetVariableByName(node.Children[1].Value);
-                            result.Add(new RawInstruction(Operations.Increment, variable.RegisterAddress, sourceVariable.RegisterAddress));
+                            result.Add(new IntermediateInstruction(Operations.Increment, variable, sourceVariable));
                         }
 
                         else if (node.Children[1].Type == NodeType.Shift)
                         {
                             var sourceVariable = _environment.GetVariableByName(node.Children[1].Children[0].Value);
-                            result.Add(new RawInstruction(node.Children[1].Children[1].Value == ">" ? Operations.ShiftRight : Operations.ShiftLeft, variable.RegisterAddress, sourceVariable.RegisterAddress));
+                            result.Add(new IntermediateInstruction(node.Children[1].Children[1].Value == ">" ? Operations.ShiftRight : Operations.ShiftLeft, variable, sourceVariable));
                         }
 
                         else if ((node.Children[1].Type == NodeType.Addition
@@ -51,12 +53,12 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                             var aVariable = _environment.GetVariableByName(node.Children[1].Children[0].Value);
                             var bVariable = _environment.GetVariableByName(node.Children[1].Children[1].Value);
 
-                            result.Add(new RawInstruction(node.Children[1].Type == NodeType.Addition ? Operations.Add : Operations.Subtract, variable.RegisterAddress, aVariable.RegisterAddress, bVariable.RegisterAddress));
+                            result.Add(new IntermediateInstruction(node.Children[1].Type == NodeType.Addition ? Operations.Add : Operations.Subtract, variable, aVariable, bVariable));
                         }
 
                         else if (node.Children[1].Type == NodeType.Input)
                         {
-                            result.Add(new RawInstruction(Operations.PortLoad, variable.RegisterAddress, int.Parse(node.Children[1].Children[0].Value)));
+                            result.Add(new IntermediateInstruction(Operations.PortLoad, variable, int.Parse(node.Children[1].Children[0].Value)));
                         }
                         break;
                     }
@@ -64,7 +66,7 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                 case NodeType.Output:
                     {
                         var sourceVariable = _environment.GetVariableByName(node.Children[1].Value);
-                        result.Add(new RawInstruction(Operations.PortStore, int.Parse(node.Children[0].Value), sourceVariable.RegisterAddress));
+                        result.Add(new IntermediateInstruction(Operations.PortStore, int.Parse(node.Children[0].Value), sourceVariable));
                     }
                     break;
 
@@ -75,34 +77,43 @@ namespace CompilerTest.Compiling.Transformation.Implementations
 
                 case NodeType.ConditionalStatement:
                     var conditionalBlockStart = result.Count;
+                    var currentLabelIndexConditional = labelIndex;
+
+                    TranslateCondition(conditionalBlockStart, "ce" + currentLabelIndexConditional);
 
                     foreach (var child in node.Children[1].Children)
                         result.AddRange(Transform(child));
 
-                    TranslateCondition(conditionalBlockStart);
+                    result.Add(new IntermediateInstruction(Operations.Label, "ce" + currentLabelIndexConditional));
 
+                    labelIndex++;
                     break;
 
                 case NodeType.WhileLoop:
                     var loopBlockStart = result.Count;
+                    var currentLabelIndexLoop = labelIndex;
+
+                    result.Add(new IntermediateInstruction(Operations.Label, "ls" + currentLabelIndexLoop));
+                    TranslateCondition(loopBlockStart, "le" + currentLabelIndexLoop);
 
                     foreach (var child in node.Children[1].Children)
                         result.AddRange(Transform(child));
 
-                    TranslateCondition(loopBlockStart);
+                    result.Add(new IntermediateInstruction(Operations.Branch, Conditions.NoCondition, "ls" + currentLabelIndexLoop));
+                    result.Add(new IntermediateInstruction(Operations.Label, "le" + currentLabelIndexLoop));
 
-                    result.Add(new RawInstruction(Operations.Branch, Conditions.NoCondition, loopBlockStart)); //somehow get the start of the block for this without global variable
+                    labelIndex++;
                     break;
 
                 case NodeType.Halt:
-                    result.Add(new RawInstruction(Operations.Halt));
+                    result.Add(new IntermediateInstruction(Operations.Halt));
                     break;
 
                 default:
                     throw new Exception();
             }
 
-            void TranslateCondition(int blockStart)
+            void TranslateCondition(int blockStart, string elseLabel)
             {
                 var aVariable = _environment.GetVariableByName(node.Children[0].Children[0].Value);
                 var bVariable = _environment.GetVariableByName(node.Children[0].Children[2].Value);
@@ -110,24 +121,24 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                 if (node.Children[0].Children[1].Value == ">="
                     || node.Children[0].Children[1].Value == "<"
                     || node.Children[0].Children[1].Value == "==")
-                    result.Insert(blockStart, new RawInstruction(Operations.Subtract,
-                        0, aVariable.RegisterAddress, bVariable.RegisterAddress));
+                    result.Add(new IntermediateInstruction(Operations.Subtract,
+                        0, aVariable, bVariable));
                 else
-                    result.Insert(blockStart, new RawInstruction(Operations.Subtract,
-                        0, bVariable.RegisterAddress, aVariable.RegisterAddress));
+                    result.Add(new IntermediateInstruction(Operations.Subtract,
+                        0, bVariable, aVariable));
 
                 if (node.Children[0].Children[1].Value == ">"
                     || node.Children[0].Children[1].Value == "<")
-                    result.Insert(blockStart + 1, new RawInstruction(Operations.Branch, Conditions.CarryOut, result.Count + 1));
+                    result.Add(new IntermediateInstruction(Operations.Branch, Conditions.CarryOut, elseLabel));
                 else if (node.Children[0].Children[1].Value == ">="
                     || node.Children[0].Children[1].Value == "<=")
-                    result.Insert(blockStart + 1, new RawInstruction(Operations.Branch, Conditions.NoCarryOut, result.Count + 1));
+                    result.Add(new IntermediateInstruction(Operations.Branch, Conditions.NoCarryOut, elseLabel));
                 else
-                    result.Insert(blockStart + 1, new RawInstruction(Operations.Branch, Conditions.NotZero, result.Count + 1));
+                    result.Add(new IntermediateInstruction(Operations.Branch, Conditions.NotZero, elseLabel));
             }
 
             if (node.Type == NodeType.Program)
-                result.Add(new RawInstruction(Operations.Halt));
+                result.Add(new IntermediateInstruction(Operations.Halt));
 
             return result;
         }

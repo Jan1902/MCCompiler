@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.Transformation
 {
-    internal class RawInstruction
+    internal class IntermediateInstruction
     {
         public Operations Operation { get; set; }
-        public List<object> Parameters { get; set; }
+        public object[] Parameters { get; set; }
 
-        public RawInstruction(Operations operation, params object[] parameters)
+        public IntermediateInstruction(Operations operation, params object[] parameters)
         {
             Operation = operation;
-            Parameters = parameters.ToList();
+            Parameters = parameters;
         }
 
-        public RawInstruction()
+        public IntermediateInstruction()
         {
 
         }
