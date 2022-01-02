@@ -65,27 +65,23 @@ namespace SchematicCreator.Generators.Implementations
                 var blockCount = (int)Math.Ceiling((double)binary.GetLength(0) / _configuration.CellsPerBlockOrPage);
                 for (int block = 0; block < blockCount; block++)
                 {
-                    for (int z = 0; z < (binary.GetLength(0) > _configuration.CellsPerBlockOrPage ? _configuration.CellsPerBlockOrPage : binary.GetLength(0)); z++)
+                    var linesForThisBlock = Math.Min(binary.GetLength(0) - block * _configuration.CellsPerBlockOrPage, _configuration.CellsPerBlockOrPage);
+                    for (int z = 0; z < linesForThisBlock; z++)
                     {
-                        for (int i = 0; i < 8; i++)
-                            blockData[Utils.CalculateIndex(
-                                width,
-                                length,
-                                _configuration.SpacingX * block,
-                                height - 1 - i * _configuration.SpacingY,
-                                z * _configuration.SpacingZ)] = binary[z, i] ? (byte)2 : (byte)1;
-
-                        for (int i = 0; i < 8; i++)
-                            blockData[Utils.CalculateIndex(
-                                width,
-                                length,
-                                _configuration.SpacingX * block + _configuration.SpacingX,
-                                height - 1 - i * _configuration.SpacingY,
-                                z * _configuration.SpacingZ)] = binary[z, i + 8] ? (byte)2 : (byte)1;
+                        for (int b = 0; b < binary.GetLength(1) / 8; b++)
+                        {
+                            for (int i = 0; i < 8; i++)
+                                blockData[Utils.CalculateIndex(
+                                    width,
+                                    length,
+                                    _configuration.SpacingX * block + (_configuration.BlockOrPageCount / 2) * _configuration.SpacingX * b,
+                                    height - 1 - i * _configuration.SpacingY,
+                                    z * _configuration.SpacingZ)] = binary[z + block * _configuration.CellsPerBlockOrPage, i + 8 * b] ? (byte)2 : (byte)1;
+                        }
                     }
                 }
 
-                continue; //ONLY ONE PAGE FOR NOW
+                break; //ONLY ONE PAGE FOR NOW
             }
 
             schematic.Add(new NbtByteArray("BlockData", blockData));
