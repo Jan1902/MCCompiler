@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CompilerTest.Compiling.Transformation.Enums;
 
-namespace CompilerTest.Compiling.Transformation
+namespace CompilerTest.Compiling.Transformation.Models
 {
     internal class IntermediateInstruction
     {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CompilerTest.Compiling.Environment
+﻿namespace CompilerTest.Compiling.Environment.Models
 {
     class Variable
     {
@@ -35,10 +29,10 @@ namespace CompilerTest.Compiling.Environment
 
         public override bool Equals(object obj)
         {
-            if(obj == null)
+            if (obj == null)
                 return false;
 
-            if(obj.GetType() != typeof(Variable))
+            if (obj.GetType() != typeof(Variable))
                 return false;
 
             return ((Variable)obj).Name == Name;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CompilerTest.Compiling.Tokenizing
+﻿namespace CompilerTest.Compiling.Tokenizing.Models
 {
     internal class Token
     {
@@ -38,6 +32,9 @@ namespace CompilerTest.Compiling.Tokenizing
         Equals,
         Plus,
         Minus,
+        Asterisc,
+        Percent,
+        Slash,
         Colon,
         NewLine,
         KeyWord,

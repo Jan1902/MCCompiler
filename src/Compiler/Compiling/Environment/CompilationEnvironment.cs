@@ -1,9 +1,7 @@
-﻿using System;
+﻿using CompilerTest.Compiling.Environment.Models;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.Environment
 {
@@ -45,9 +43,7 @@ namespace CompilerTest.Compiling.Environment
             var variable =
                 new Variable(name,
                     false,
-                    CustomVariables.Any()
-                        ? CustomVariables.Max(v => v.RegisterAddress) + 1
-                        : 1);
+                    0);
 
             CustomVariables.Add(variable);
             return variable;

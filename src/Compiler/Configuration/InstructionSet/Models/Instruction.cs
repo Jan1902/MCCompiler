@@ -1,12 +1,7 @@
-﻿using CompilerTest.Compiling.Transformation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using CompilerTest.Compiling.Transformation.Enums;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace CompilerTest.Compiling.InstructionSet
+namespace CompilerTest.Compiling.InstructionSet.Models
 {
     public class Instruction
     {

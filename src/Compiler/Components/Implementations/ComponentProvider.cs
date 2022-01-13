@@ -1,40 +1,47 @@
 ﻿using CompilerTest.Compiling;
+using CompilerTest.Compiling.Analyzing;
+using CompilerTest.Compiling.CodeGeneration.Intermediate;
+using CompilerTest.Compiling.CodeGeneration.Intermediate.Transpiling;
+using CompilerTest.Compiling.CodeGeneration.RegisterAllocation;
+using CompilerTest.Compiling.CodeGeneration.RegisterAllocation.Implementations;
+using CompilerTest.Compiling.CodeGeneration.Target;
+using CompilerTest.Compiling.CodeGeneration.Target.IntermediateParsing;
+using CompilerTest.Compiling.Environment;
 using CompilerTest.Compiling.Parsing;
 using CompilerTest.Compiling.Parsing.Implementations;
 using CompilerTest.Compiling.Tokenizing;
 using CompilerTest.Compiling.Tokenizing.Implementations;
 using CompilerTest.Compiling.Transformation;
 using CompilerTest.Compiling.Transformation.Implementations;
-using CompilerTest.Compiling.Translation;
-using CompilerTest.Compiling.Translation.Implementations;
-using CompilerTest.Components;
 using CompilerTest.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Components.Implementations
 {
     internal class ComponentProvider : IComponentProvider
     {
         private readonly IConfigurationManager _configurationManager;
+        private readonly CompilationEnvironment _compilationEnvironment;
 
-        public ICompiler Compiler { get => ChooseCompiler(); }
-        public ITokenizer Tokenizer { get => ChooseTokenizer(); }
-        public IParser Parser { get => ChooseParser(); }
-        public ITransformer Transformer { get => ChooseTransformer(); }
-        public ITranslator Translator { get => ChooseTranslator(); }
+        public ICompiler Compiler => ChooseCompiler();
+        public ITokenizer Tokenizer => ChooseTokenizer();
+        public IParser Parser => ChooseParser();
+        public IAnalyzer Analyzer => ChooseAnalyzer();
+        public ITransformer Transformer => ChooseTransformer();
+        public IIntermediateTranslator IntermediateTranslator => ChooseIntermediateTranslator();
+        public ITargetTranslator TargetTranslator => ChooseTargetTranslator();
+        public IIntermediateParser IntermediateParser => ChooseIntermediateParser();
+        public IIntermediateTranspiler IntermediateTranspiler => ChooseIntermediateTranspiler();
+        public IRegisterAllocator RegisterAllocator => ChooseRegisterAllocator();
 
         public ComponentProvider(IConfigurationManager configurationManager)
         {
+            _compilationEnvironment = new CompilationEnvironment();
             _configurationManager = configurationManager;
         }
 
         private ICompiler ChooseCompiler()
         {
-            return new Compiler(_configurationManager.Configuration, this);
+            return new Compiler(this);
         }
 
         private ITokenizer ChooseTokenizer()
@@ -47,17 +54,39 @@ namespace CompilerTest.Components.Implementations
             return new Parser();
         }
 
-        private ITransformer ChooseTransformer()
+        private IAnalyzer ChooseAnalyzer()
         {
-            if (_configurationManager.Configuration.Architecture == CPUArchitectureType.ThreeOP)
-                return new Transformer();
-
-            throw new Exception("Couldn't find a Transformer implementation that is compatible with the given CPU Architecture");
+            return new Analyzer();
         }
 
-        private ITranslator ChooseTranslator()
+        private ITransformer ChooseTransformer()
         {
-            return new Translator(_configurationManager.Configuration.InstructionSet);
+            return new Transformer(_compilationEnvironment);
+        }
+
+        private IIntermediateTranslator ChooseIntermediateTranslator()
+        {
+            return new URCLIntermediateTranslator(_compilationEnvironment);
+        }
+
+        private ITargetTranslator ChooseTargetTranslator()
+        {
+            return new TargetTranslator(_configurationManager.Configuration.InstructionSet);
+        }
+
+        private IIntermediateParser ChooseIntermediateParser()
+        {
+            return new URCLIntermediateParser(_compilationEnvironment);
+        }
+
+        private IIntermediateTranspiler ChooseIntermediateTranspiler()
+        {
+            return new URCLIntermediateTranspiler();
+        }
+
+        private IRegisterAllocator ChooseRegisterAllocator()
+        {
+            return new BasicRegisterAllocator();
         }
     }
 }

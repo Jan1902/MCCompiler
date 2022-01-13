@@ -1,21 +1,13 @@
-﻿using CompilerTest.Compiling.Environment;
-using CompilerTest.Compiling.InstructionSet;
+﻿using CompilerTest.Compiling.Analyzing;
+using CompilerTest.Compiling.CodeGeneration.Intermediate;
+using CompilerTest.Compiling.CodeGeneration.Intermediate.Transpiling;
+using CompilerTest.Compiling.CodeGeneration.RegisterAllocation;
+using CompilerTest.Compiling.CodeGeneration.Target;
+using CompilerTest.Compiling.CodeGeneration.Target.IntermediateParsing;
 using CompilerTest.Compiling.Parsing;
-using CompilerTest.Compiling.Parsing.Implementations;
 using CompilerTest.Compiling.Tokenizing;
-using CompilerTest.Compiling.Tokenizing.Implementations;
 using CompilerTest.Compiling.Transformation;
-using CompilerTest.Compiling.Transformation.Implementations;
-using CompilerTest.Compiling.Translation;
-using CompilerTest.Compiling.Translation.Implementations;
 using CompilerTest.Components;
-using CompilerTest.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling
 {
@@ -30,24 +22,34 @@ namespace CompilerTest.Compiling
 
         public string[] Compile(string code)
         {
-            var environment = new CompilationEnvironment();
-
             ITokenizer tokenizer = _componentProvider.Tokenizer;
             var tokens = tokenizer.Tokenize(code);
 
             IParser parser = _componentProvider.Parser;
             var ast = parser.Parse(tokens);
 
+            IAnalyzer analyzer = _componentProvider.Analyzer;
+            ast = analyzer.AnalyzeAndCleanUp(ast);
+
             ITransformer transformer = _componentProvider.Transformer;
             var instructions = transformer.Transform(ast);
 
-            var registerAllocator = new RegisterAllocator();
-            instructions = registerAllocator.AllocateRegisters(instructions).ToList();
+            IIntermediateTranslator intermediateTranslator = _componentProvider.IntermediateTranslator;
+            var output = intermediateTranslator.Translate(instructions);
 
-            ITranslator translator = _componentProvider.Translator;
-            var output = translator.Translate(instructions);
+            IIntermediateTranspiler intermediateTranspiler = _componentProvider.IntermediateTranspiler;
+            output = intermediateTranspiler.Transpile(output);
 
-            return output.ToArray();
+            IIntermediateParser intermediateParser = _componentProvider.IntermediateParser;
+            instructions = intermediateParser.Parse(output);
+
+            IRegisterAllocator registerAllocator = _componentProvider.RegisterAllocator;
+            instructions = registerAllocator.AllocateRegisters(instructions);
+
+            ITargetTranslator targetTranslator = _componentProvider.TargetTranslator;
+            output = targetTranslator.Translate(instructions);
+
+            return output;
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using CompilerTest.Compiling.Environment;
-using CompilerTest.Compiling.Parsing;
+using CompilerTest.Compiling.Parsing.Models;
+using CompilerTest.Compiling.Transformation.Enums;
+using CompilerTest.Compiling.Transformation.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.Transformation.Implementations
 {
@@ -12,17 +11,33 @@ namespace CompilerTest.Compiling.Transformation.Implementations
     {
         private readonly CompilationEnvironment _environment;
 
-        private readonly List<IntermediateInstruction> result;
-
         private int labelIndex;
 
-        public Transformer()
+        private Dictionary<string, Operations> arithmetics = new Dictionary<string, Operations>()
         {
-            result = new List<IntermediateInstruction>();
-            _environment = new CompilationEnvironment();
+            { "+", Operations.ADD },
+            { "-", Operations.SUB },
+            { "*", Operations.MLT },
+            { "/", Operations.DIV },
+            { "%", Operations.MOD },
+        };
+
+        private Dictionary<string, Operations> branchTypes = new Dictionary<string, Operations>()
+        {
+            { ">", Operations.BRG },
+            { ">=", Operations.BGE },
+            { "<", Operations.BRL },
+            { "<=", Operations.BLE },
+            { "==", Operations.BRE },
+            { "!=", Operations.BNE }
+        };
+
+        public Transformer(CompilationEnvironment environment)
+        {
+            _environment = environment;
         }
 
-        public List<IntermediateInstruction> Transform(Node node)
+        public List<IntermediateInstruction> Transform(ASTNode node)
         {
             var result = new List<IntermediateInstruction>();
 
@@ -32,33 +47,32 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                     {
                         var variable = _environment.GetOrCreateVariable(node.Children[0].Value);
                         if (node.Children[1].Type == NodeType.Value)
-                            result.Add(new IntermediateInstruction(Operations.LoadImmediate, variable, int.Parse(node.Children[1].Value)));
+                            result.Add(new IntermediateInstruction(Operations.IMM, variable, int.Parse(node.Children[1].Value)));
 
                         else if (node.Children[1].Type == NodeType.Increment)
                         {
                             var sourceVariable = _environment.GetVariableByName(node.Children[1].Value);
-                            result.Add(new IntermediateInstruction(Operations.Increment, variable, sourceVariable));
+                            result.Add(new IntermediateInstruction(Operations.INC, variable, sourceVariable));
                         }
 
                         else if (node.Children[1].Type == NodeType.Shift)
                         {
                             var sourceVariable = _environment.GetVariableByName(node.Children[1].Children[0].Value);
-                            result.Add(new IntermediateInstruction(node.Children[1].Children[1].Value == ">" ? Operations.ShiftRight : Operations.ShiftLeft, variable, sourceVariable));
+                            result.Add(new IntermediateInstruction(node.Children[1].Children[1].Value == ">" ? Operations.RSH : Operations.LSH, variable, sourceVariable));
                         }
 
-                        else if ((node.Children[1].Type == NodeType.Addition
-                            || node.Children[1].Type == NodeType.Subtraction)
-                            && node.Children[1].Children.Count == 2)
+                        else if (node.Children[1].Type == NodeType.Arithmetic
+                            && node.Children[1].Children.Count == 3)
                         {
                             var aVariable = _environment.GetVariableByName(node.Children[1].Children[0].Value);
-                            var bVariable = _environment.GetVariableByName(node.Children[1].Children[1].Value);
+                            var bVariable = _environment.GetVariableByName(node.Children[1].Children[2].Value);
 
-                            result.Add(new IntermediateInstruction(node.Children[1].Type == NodeType.Addition ? Operations.Add : Operations.Subtract, variable, aVariable, bVariable));
+                            result.Add(new IntermediateInstruction(arithmetics[node.Children[1].Children[1].Value], variable, aVariable, bVariable));
                         }
 
                         else if (node.Children[1].Type == NodeType.Input)
                         {
-                            result.Add(new IntermediateInstruction(Operations.PortLoad, variable, int.Parse(node.Children[1].Children[0].Value)));
+                            result.Add(new IntermediateInstruction(Operations.IN, variable, int.Parse(node.Children[1].Children[0].Value)));
                         }
                         break;
                     }
@@ -66,11 +80,11 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                 case NodeType.Output:
                     {
                         var sourceVariable = _environment.GetVariableByName(node.Children[1].Value);
-                        result.Add(new IntermediateInstruction(Operations.PortStore, int.Parse(node.Children[0].Value), sourceVariable));
+                        result.Add(new IntermediateInstruction(Operations.OUT, int.Parse(node.Children[0].Value), sourceVariable));
                     }
                     break;
 
-                case NodeType.Program:
+                case NodeType.Root:
                     foreach (var child in node.Children)
                         result.AddRange(Transform(child));
                     break;
@@ -84,7 +98,7 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                     foreach (var child in node.Children[1].Children)
                         result.AddRange(Transform(child));
 
-                    result.Add(new IntermediateInstruction(Operations.Label, "ce" + currentLabelIndexConditional));
+                    result.Add(new IntermediateInstruction(Operations.LBL, "ce" + currentLabelIndexConditional));
 
                     labelIndex++;
                     break;
@@ -93,52 +107,36 @@ namespace CompilerTest.Compiling.Transformation.Implementations
                     var loopBlockStart = result.Count;
                     var currentLabelIndexLoop = labelIndex;
 
-                    result.Add(new IntermediateInstruction(Operations.Label, "ls" + currentLabelIndexLoop));
+                    result.Add(new IntermediateInstruction(Operations.LBL, "ls" + currentLabelIndexLoop));
                     TranslateCondition(loopBlockStart, "le" + currentLabelIndexLoop);
 
                     foreach (var child in node.Children[1].Children)
                         result.AddRange(Transform(child));
 
-                    result.Add(new IntermediateInstruction(Operations.Branch, Conditions.NoCondition, "ls" + currentLabelIndexLoop));
-                    result.Add(new IntermediateInstruction(Operations.Label, "le" + currentLabelIndexLoop));
+                    result.Add(new IntermediateInstruction(Operations.JMP, "ls" + currentLabelIndexLoop));
+                    result.Add(new IntermediateInstruction(Operations.LBL, "le" + currentLabelIndexLoop));
 
                     labelIndex++;
                     break;
 
                 case NodeType.Halt:
-                    result.Add(new IntermediateInstruction(Operations.Halt));
+                    result.Add(new IntermediateInstruction(Operations.HLT));
                     break;
 
                 default:
                     throw new Exception();
             }
 
+            if (node.Type == NodeType.Root)
+                result.Add(new IntermediateInstruction(Operations.HLT));
+
             void TranslateCondition(int blockStart, string elseLabel)
             {
                 var aVariable = _environment.GetVariableByName(node.Children[0].Children[0].Value);
                 var bVariable = _environment.GetVariableByName(node.Children[0].Children[2].Value);
 
-                if (node.Children[0].Children[1].Value == ">="
-                    || node.Children[0].Children[1].Value == "<"
-                    || node.Children[0].Children[1].Value == "==")
-                    result.Add(new IntermediateInstruction(Operations.Subtract,
-                        0, aVariable, bVariable));
-                else
-                    result.Add(new IntermediateInstruction(Operations.Subtract,
-                        0, bVariable, aVariable));
-
-                if (node.Children[0].Children[1].Value == ">"
-                    || node.Children[0].Children[1].Value == "<")
-                    result.Add(new IntermediateInstruction(Operations.Branch, Conditions.CarryOut, elseLabel));
-                else if (node.Children[0].Children[1].Value == ">="
-                    || node.Children[0].Children[1].Value == "<=")
-                    result.Add(new IntermediateInstruction(Operations.Branch, Conditions.NoCarryOut, elseLabel));
-                else
-                    result.Add(new IntermediateInstruction(Operations.Branch, Conditions.NotZero, elseLabel));
+                result.Add(new IntermediateInstruction(branchTypes[node.Children[0].Children[1].Value], elseLabel, aVariable, bVariable));
             }
-
-            if (node.Type == NodeType.Program)
-                result.Add(new IntermediateInstruction(Operations.Halt));
 
             return result;
         }

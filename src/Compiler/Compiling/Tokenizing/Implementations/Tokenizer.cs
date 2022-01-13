@@ -1,9 +1,7 @@
-﻿using System;
+﻿using CompilerTest.Compiling.Tokenizing.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.Tokenizing.Implementations
 {
@@ -15,6 +13,9 @@ namespace CompilerTest.Compiling.Tokenizing.Implementations
             { ':', TokenType.Colon },
             { '+', TokenType.Plus },
             { '-', TokenType.Minus },
+            { '*', TokenType.Asterisc },
+            { '/', TokenType.Slash },
+            { '%', TokenType.Percent },
             { '(', TokenType.LeftBracket },
             { ')', TokenType.RightBracket },
             { '{', TokenType.LeftCurlyBracket },
@@ -30,7 +31,8 @@ namespace CompilerTest.Compiling.Tokenizing.Implementations
             "while",
             "input",
             "output",
-            "halt"
+            "halt",
+            "func"
         };
 
         public Token[] Tokenize(string code)

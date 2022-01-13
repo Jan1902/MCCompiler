@@ -1,9 +1,7 @@
-﻿using CompilerTest.Compiling.Tokenizing;
+﻿using CompilerTest.Compiling.Parsing.Models;
+using CompilerTest.Compiling.Tokenizing.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.Parsing.Implementations
 {
@@ -12,7 +10,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
         private int current;
         private Token token;
 
-        private Node ast;
+        private ASTNode ast;
 
         private Token[] _tokens;
 
@@ -56,12 +54,12 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 throw Error(token, "Used unassigned variable '{0}'", token.Content);
         }
 
-        public Node Parse(Token[] tokens)
+        public ASTNode Parse(Token[] tokens)
         {
             _tokens = tokens;
             token = _tokens[0];
 
-            ast = new Node(NodeType.Program, null);
+            ast = new ASTNode(NodeType.Root, null);
 
             while (current < _tokens.Length)
                 ast.Children.Add(Walk());
@@ -69,7 +67,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             return ast;
         }
 
-        private Node Walk()
+        private ASTNode Walk()
         {
             // Increment
             if (token.Type == TokenType.Identifier
@@ -79,7 +77,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 var variable = token.Content;
                 CheckVariable();
                 Advance(3);
-                return new Node(NodeType.Increment, variable);
+                return new ASTNode(NodeType.Increment, variable);
             }
 
             // Decrement
@@ -90,7 +88,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 var variable = token.Content;
                 CheckVariable();
                 Advance(3);
-                return new Node(NodeType.Decrement, variable);
+                return new ASTNode(NodeType.Decrement, variable);
             }
 
             // Condition
@@ -101,9 +99,9 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                     && PeekType(2, TokenType.Equals)
                     && PeekType(3, TokenType.Number, TokenType.Identifier)))
             {
-                var node = new Node(NodeType.Condition);
+                var node = new ASTNode(NodeType.Condition);
 
-                node.Children.Add(new Node(NodeType.Variable, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
                 CheckVariable();
                 Advance();
 
@@ -115,16 +113,16 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                     Advance();
                 }
 
-                node.Children.Add(new Node(NodeType.Sign, sign));
+                node.Children.Add(new ASTNode(NodeType.Sign, sign));
 
                 if (token.Type == TokenType.Identifier)
                 {
                     CheckVariable();
-                    node.Children.Add(new Node(NodeType.Variable, token.Content));
+                    node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
                 }
                 else
                 {
-                    node.Children.Add(new Node(NodeType.Value, token.Content));
+                    node.Children.Add(new ASTNode(NodeType.Value, token.Content));
                 }
                 Advance();
 
@@ -136,42 +134,28 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 && PeekType(1, TokenType.Equals)
                 && PeekType(2, TokenType.Number, TokenType.Identifier, TokenType.KeyWord))
             {
-                var node = new Node(NodeType.Assignment);
+                var node = new ASTNode(NodeType.Assignment);
 
-                node.Children.Add(new Node(NodeType.Variable, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
                 Advance(2);
                 node.Children.Add(Walk());
 
                 return node;
             }
 
-            // Addition
+            // Arithmetic
             if (token.Type == TokenType.Identifier
-                && PeekType(1, TokenType.Plus)
+                && PeekType(1, TokenType.Plus, TokenType.Minus, TokenType.Asterisc, TokenType.Slash, TokenType.Percent)
                 && PeekType(2, TokenType.Identifier))
             {
                 CheckVariable();
 
-                var node = new Node(NodeType.Addition);
+                var node = new ASTNode(NodeType.Arithmetic);
 
-                node.Children.Add(new Node(NodeType.Variable, token.Content));
-                Advance(2);
-                node.Children.Add(Walk());
-
-                return node;
-            }
-
-            // Subtraction
-            if (token.Type == TokenType.Identifier
-                && PeekType(1, TokenType.Minus)
-                && PeekType(2, TokenType.Identifier))
-            {
-                CheckVariable();
-
-                var node = new Node(NodeType.Subtraction);
-
-                node.Children.Add(new Node(NodeType.Variable, token.Content));
-                Advance(2);
+                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
+                Advance();
+                node.Children.Add(new ASTNode(NodeType.Sign, token.Content));
+                Advance();
                 node.Children.Add(Walk());
 
                 return node;
@@ -184,7 +168,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 // Opening Bracket for condition
                 Consume(TokenType.LeftBracket);
 
-                var node = new Node(NodeType.ConditionalStatement);
+                var node = new ASTNode(NodeType.ConditionalStatement);
 
                 // Condition
                 node.Children.Add(Walk());
@@ -197,7 +181,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 var blockStartLine = token.Line;
 
                 // Block
-                var block = new Node(NodeType.Block);
+                var block = new ASTNode(NodeType.Block);
 
                 // Walk till closing bracket for block
                 while (token.Type != TokenType.RightCurlyBracket)
@@ -221,7 +205,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 // Opening Bracket for condition
                 Consume(TokenType.LeftBracket);
 
-                var node = new Node(NodeType.WhileLoop);
+                var node = new ASTNode(NodeType.WhileLoop);
 
                 // Condition
                 node.Children.Add(Walk());
@@ -234,7 +218,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 var blockStartLine = token.Line;
 
                 // Block
-                var block = new Node(NodeType.Block);
+                var block = new ASTNode(NodeType.Block);
 
                 // Walk till closing bracket for block
                 while (token.Type != TokenType.RightCurlyBracket)
@@ -257,7 +241,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 Advance();
                 Consume(TokenType.LeftBracket);
                 Consume(TokenType.RightBracket);
-                return new Node(NodeType.Halt);
+                return new ASTNode(NodeType.Halt);
             }
 
             // Input
@@ -267,8 +251,8 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 Consume(TokenType.LeftBracket);
                 Consume(TokenType.Number, false);
 
-                var node = new Node(NodeType.Input);
-                node.Children.Add(new Node(NodeType.Value, token.Content));
+                var node = new ASTNode(NodeType.Input);
+                node.Children.Add(new ASTNode(NodeType.Value, token.Content));
 
                 Advance();
                 Consume(TokenType.RightBracket);
@@ -281,16 +265,16 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 Advance();
                 Consume(TokenType.LeftBracket);
 
-                var node = new Node(NodeType.Output);
+                var node = new ASTNode(NodeType.Output);
 
                 Consume(TokenType.Number, false);
-                node.Children.Add(new Node(NodeType.Value, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Value, token.Content));
 
                 Advance();
                 Consume(TokenType.Comma);
 
                 Consume(TokenType.Identifier, false);
-                node.Children.Add(new Node(NodeType.Variable, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
 
                 Advance();
                 Consume(TokenType.RightBracket);
@@ -302,13 +286,13 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 && PeekType(1, TokenType.Bigger, TokenType.Smaller)
                 && PeekType(2, TokenType.Bigger, TokenType.Smaller))
             {
-                var node = new Node(NodeType.Shift);
+                var node = new ASTNode(NodeType.Shift);
 
-                node.Children.Add(new Node(NodeType.Variable, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
                 Advance();
 
                 var type = token.Type;
-                node.Children.Add(new Node(NodeType.Sign, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Sign, token.Content));
 
                 Advance();
 
@@ -318,10 +302,49 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 return node;
             }
 
+            // Function
+            if(token.Type == TokenType.KeyWord && token.Content == "func")
+            {
+                var node = new ASTNode(NodeType.FunctionDefinition);
+                Advance();
+                Consume(TokenType.Identifier, false);
+
+                // Function Name
+                node.Children.Add(new ASTNode(NodeType.Value, token.Content));
+
+                Advance();
+
+                // No parameters yet
+                Consume(TokenType.LeftBracket);
+                Consume(TokenType.RightBracket);
+
+                // Opening Curly Bracket
+                Consume(TokenType.LeftCurlyBracket);
+
+                var blockStartLine = token.Line;
+
+                // Block
+                var block = new ASTNode(NodeType.Block);
+
+                // Walk till closing bracket for block
+                while (token.Type != TokenType.RightCurlyBracket)
+                    block.Children.Add(Walk());
+
+                if (token.Type != TokenType.RightCurlyBracket)
+                    throw Error("No closing bracket found for block starting at line {0}", blockStartLine);
+
+                node.Children.Add(block);
+
+                // Closing Bracket for block
+                Consume(TokenType.RightCurlyBracket);
+
+                return node;
+            }
+
             // Number
             if (token.Type == TokenType.Number)
             {
-                var node = new Node(NodeType.Value, token.Content);
+                var node = new ASTNode(NodeType.Value, token.Content);
                 Advance();
                 return node;
             }
@@ -329,7 +352,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             // Variable
             if (token.Type == TokenType.Identifier)
             {
-                var node = new Node(NodeType.Variable, token.Content);
+                var node = new ASTNode(NodeType.Variable, token.Content);
                 Advance();
                 return node;
             }

@@ -1,9 +1,10 @@
-﻿using CompilerTest.Compiling.Tokenizing;
+﻿using CompilerTest.Compiling.Parsing.Models;
+using CompilerTest.Compiling.Tokenizing.Models;
 
 namespace CompilerTest.Compiling.Parsing
 {
     internal interface IParser
     {
-        Node Parse(Token[] tokens);
+        ASTNode Parse(Token[] tokens);
     }
 }

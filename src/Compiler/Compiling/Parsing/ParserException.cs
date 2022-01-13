@@ -1,9 +1,5 @@
-﻿using CompilerTest.Compiling.Tokenizing;
+﻿using CompilerTest.Compiling.Tokenizing.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.Parsing
 {

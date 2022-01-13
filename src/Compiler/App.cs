@@ -1,16 +1,10 @@
 ﻿using CommandLine;
 using CompilerTest.CLI;
-using CompilerTest.Compiling;
-using CompilerTest.Compiling.InstructionSet;
 using CompilerTest.Components;
 using CompilerTest.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CompilerTest
 {
@@ -35,10 +29,6 @@ namespace CompilerTest
             if (options == null)
                 return;
 
-            //Config
-            _configManager.Load(options.ConfigFile);
-
-            _logger.LogInformation("");
             _logger.LogInformation("Compiler started");
 
             // Check files
@@ -48,16 +38,16 @@ namespace CompilerTest
                 return;
             }
 
-            if (!File.Exists(options.InstructionSetFile))
+            if (!File.Exists(options.ConfigFile))
             {
-                _logger.LogError("File '{0}' not found", options.InstructionSetFile);
+                _logger.LogError("File '{0}' not found", options.ConfigFile);
                 return;
             }
 
-            // Instruction Set
-            _logger.LogInformation("Loading Instruction Set from file '{0}'", options.InstructionSetFile);
+            //Config
+            _configManager.Load(options.ConfigFile);
 
-            _logger.LogInformation("Successfully loaded Instruction Set with {0} instructions and {1} conditions", _configManager.Configuration.InstructionSet.Instructions.Count, _configManager.Configuration.InstructionSet.Conditions.Count);
+            _logger.LogInformation("Successfully loaded Config and Instruction Set with {0} instructions and {1} conditions", _configManager.Configuration.InstructionSet.Instructions.Count, _configManager.Configuration.InstructionSet.Conditions.Count);
 
             // Code
             _logger.LogInformation("Compiling file '{0}'", options.CodeFile);

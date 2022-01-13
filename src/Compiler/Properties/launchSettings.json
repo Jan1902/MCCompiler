@@ -2,7 +2,7 @@
   "profiles": {
     "CompilerTest": {
       "commandName": "Project",
-      "commandLineArgs": "-c code.txt -i is.txt -o result.txt -f config.json"
+      "commandLineArgs": "-c code.txt -o result.txt -f config.json"
     }
   }
 }

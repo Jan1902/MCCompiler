@@ -1,9 +1,5 @@
-﻿using CompilerTest.Compiling.Environment;
-using System;
+﻿using CompilerTest.Compiling.Environment.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.Transformation.Models.Graph
 {
@@ -11,6 +7,7 @@ namespace CompilerTest.Compiling.Transformation.Models.Graph
     {
         public Variable Variable { get; set; }
         public List<VariableNode> Connected { get; set; }
+        public List<VariableNode> OriginallyConnected { get; set; }
         public int Color { get; set; }
 
         public VariableNode(Variable variable)

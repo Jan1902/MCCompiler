@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace CompilerTest.Compiling.Parsing
+namespace CompilerTest.Compiling.Parsing.Models
 {
-    internal class Node
+    internal class ASTNode
     {
         public NodeType Type { get; set; }
         public string Value { get; set; }
-        public List<Node> Children { get; set; } = new List<Node>();
+        public List<ASTNode> Children { get; set; } = new List<ASTNode>();
 
-        public Node(NodeType type, string value)
+        public ASTNode(NodeType type, string value)
         {
             Type = type;
             Value = value;
         }
 
-        public Node(NodeType type)
+        public ASTNode(NodeType type)
         {
             Type = type;
         }
@@ -29,9 +25,8 @@ namespace CompilerTest.Compiling.Parsing
         Assignment,
         Value,
         Variable,
-        Program,
-        Addition,
-        Subtraction,
+        Root,
+        Arithmetic,
         Increment,
         Decrement,
         WhileLoop,
@@ -42,6 +37,8 @@ namespace CompilerTest.Compiling.Parsing
         Input,
         Output,
         Halt,
-        Shift
+        Shift,
+        FunctionDefinition,
+        FunctionCall
     }
 }

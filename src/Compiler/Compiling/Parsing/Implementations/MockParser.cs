@@ -1,47 +1,45 @@
-﻿using CompilerTest.Compiling.Tokenizing;
-using System;
+﻿using CompilerTest.Compiling.Parsing.Models;
+using CompilerTest.Compiling.Tokenizing.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.Parsing.Implementations
 {
     internal class MockParser : IParser
     {
-        public Node Parse(Token[] tokens)
+        public ASTNode Parse(Token[] tokens)
         {
-            var ast = new Node(NodeType.Program);
+            var ast = new ASTNode(NodeType.Root);
 
-            ast.Children.Add(new Node(NodeType.Assignment)
+            ast.Children.Add(new ASTNode(NodeType.Assignment)
             {
-                Children = new List<Node>()
+                Children = new List<ASTNode>()
                 {
-                    new Node(NodeType.Variable, "a"),
-                    new Node(NodeType.Value, "1")
+                    new ASTNode(NodeType.Variable, "a"),
+                    new ASTNode(NodeType.Value, "1")
                 }
             });
 
-            ast.Children.Add(new Node(NodeType.Assignment)
+            ast.Children.Add(new ASTNode(NodeType.Assignment)
             {
-                Children = new List<Node>()
+                Children = new List<ASTNode>()
                 {
-                    new Node(NodeType.Variable, "b"),
-                    new Node(NodeType.Value, "2")
+                    new ASTNode(NodeType.Variable, "b"),
+                    new ASTNode(NodeType.Value, "2")
                 }
             });
 
-            ast.Children.Add(new Node(NodeType.Assignment)
+            ast.Children.Add(new ASTNode(NodeType.Assignment)
             {
-                Children = new List<Node>()
+                Children = new List<ASTNode>()
                 {
-                    new Node(NodeType.Variable, "c"),
-                    new Node(NodeType.Addition)
+                    new ASTNode(NodeType.Variable, "c"),
+                    new ASTNode(NodeType.Arithmetic)
                     {
-                        Children = new List<Node>()
+                        Children = new List<ASTNode>()
                         {
-                            new Node(NodeType.Variable, "a"),
-                            new Node(NodeType.Variable, "b")
+                            new ASTNode(NodeType.Variable, "a"),
+                            new ASTNode(NodeType.Sign, "+"),
+                            new ASTNode(NodeType.Variable, "b")
                         }
                     }
                 }

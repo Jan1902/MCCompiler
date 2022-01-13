@@ -1,13 +1,8 @@
-﻿using CompilerTest.Compiling;
-using CompilerTest.Compiling.InstructionSet;
-using CompilerTest.Components;
+﻿using CompilerTest.Components;
 using CompilerTest.Components.Implementations;
 using CompilerTest.Configuration;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.IO;
 
 namespace CompilerTest
 {

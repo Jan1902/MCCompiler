@@ -1,13 +1,11 @@
-﻿using CompilerTest.Compiling.Transformation;
-using System;
+﻿using CompilerTest.Compiling.InstructionSet.Models;
+using CompilerTest.Compiling.Transformation.Enums;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CompilerTest.Compiling.InstructionSet
 {
-    internal class InstructionSet : IInstructionSet
+    internal class BasicInstructionSet
     {
         public ICollection<Instruction> Instructions { get; set; } = new List<Instruction>();
         public ICollection<Condition> Conditions { get; set; } = new List<Condition>();

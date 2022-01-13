@@ -1,20 +1,17 @@
 ﻿using CompilerTest.Compiling.InstructionSet;
-using CompilerTest.Compiling.Transformation;
-using Microsoft.Extensions.Logging;
+using CompilerTest.Compiling.Transformation.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace CompilerTest.Compiling.Translation.Implementations
+namespace CompilerTest.Compiling.CodeGeneration.Target
 {
-    internal class Translator : ITranslator
+    internal class TargetTranslator : ITargetTranslator
     {
-        private readonly IInstructionSet _instructionSet;
+        private readonly BasicInstructionSet _instructionSet;
 
-        public Translator(IInstructionSet instructionSet)
+        public TargetTranslator(BasicInstructionSet instructionSet)
         {
             _instructionSet = instructionSet;
         }
@@ -22,22 +19,6 @@ namespace CompilerTest.Compiling.Translation.Implementations
         public string[] Translate(List<IntermediateInstruction> instructions)
         {
             var output = new List<string>();
-
-            // Resolve Jumps
-            for (int l = instructions.Count - 1; l >= 0; l--)
-            {
-                var instruction = instructions[l];
-
-                if(instruction.Operation == Operations.Branch)
-                {
-                    if (instruction.Parameters[1] is not string)
-                        continue;
-
-                    var target = instructions.FirstOrDefault(i => i.Operation == Operations.Label && (string)i.Parameters[0] == (string)instruction.Parameters[1]);
-                    instruction.Parameters[1] = instructions.IndexOf(target);
-                    instructions.RemoveAt(instructions.IndexOf(target));
-                }
-            }
 
             foreach (var rawInstruction in instructions)
             {
@@ -60,29 +41,17 @@ namespace CompilerTest.Compiling.Translation.Implementations
                     continue;
                 }
 
-                var result = instruction.Translation;
+                var result = instruction.Translation.ToLower();
 
                 // Parts of translation to replace
-                var tokens = Regex.Matches(instruction.Translation, @"(.)\1{1,}")
-                    .Where(m => !m.Value.StartsWith("0"))
+                var tokens = Regex.Matches(result, @"([a-z])\1{1,}")
                     .Select(m => m.Value)
                     .ToArray();
-
-                if (rawInstruction.Operation == Operations.Branch)
-                {
-                    var condition = _instructionSet.GetCondition((Conditions)rawInstruction.Parameters[0]);
-
-                    // Unknown Condition
-                    if (condition == null)
-                        throw new Exception(string.Format("Translation Error: Couldn't find condition '{0}' in Instruction Set", rawInstruction.Operation));
-
-                    rawInstruction.Parameters[0] = condition.OPCode;
-                }
 
                 for (int i = 0; i < tokens.Count(); i++)
                 {
                     // The value
-                    var param = (int)rawInstruction.Parameters[int.Parse(tokens[i].First().ToString()) - 1];
+                    var param = int.Parse(rawInstruction.Parameters[tokens[i].First() - 97].ToString());
 
                     // Convert value to binary
                     var part = Convert.ToString(param, 2).PadLeft(tokens[i].Length, '0');
