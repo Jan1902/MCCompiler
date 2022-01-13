@@ -2,10 +2,6 @@
 using SchematicCreator.Configuration;
 using SchematicCreator.Generators;
 using SchematicCreator.Parsing;
-using System;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Linq;
 
 namespace SchematicCreator
 {
