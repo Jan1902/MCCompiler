@@ -53,5 +53,3 @@ while (x < xEnd) {
   output(4, x)
   output(5, y)
 }
-
-halt()

@@ -11,5 +11,3 @@ while(a < max)
   a = a + b
   b = a + b
 }
-
-halt()
