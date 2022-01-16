@@ -107,12 +107,14 @@ _Both the compiler and the Schematic Generator are operated through the command 
 	- [x] Tokenizer
     - [x] Parser
         - [ ] Better Syntax Error Recognition
-    - [ ] Support different CPU architectures
+    - [x] Support different CPU architectures
+    	- [x] Intermediate Language
+    - [x] Analyzer
     - [x] Transformer
     - [x] Translator
         - [ ] Handling nested calculations
     - [x] Proper CLI
-    - [ ] Register Allocation
+    - [x] Register Allocation
     - [ ] Automatically create temporary variables when needed
 - [X] Schematic Generator
 	- [X] Configuration
