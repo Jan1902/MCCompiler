@@ -101,7 +101,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             {
                 var node = new ASTNode(NodeType.Condition);
 
-                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Identifier, token.Content));
                 CheckVariable();
                 Advance();
 
@@ -118,13 +118,35 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 if (token.Type == TokenType.Identifier)
                 {
                     CheckVariable();
-                    node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
+                    node.Children.Add(new ASTNode(NodeType.Identifier, token.Content));
                 }
                 else
                 {
                     node.Children.Add(new ASTNode(NodeType.Value, token.Content));
                 }
                 Advance();
+
+                return node;
+            }
+
+            // Constant assignment
+            if(token.Type == TokenType.KeyWord && token.Content == "const")
+            {
+                Advance();
+                Consume(TokenType.Identifier, false);
+                var name = token.Content;
+                Advance();
+
+                Consume(TokenType.Equals);
+
+                Consume(TokenType.Number, false);
+                var value = token.Content;
+
+                Advance();
+
+                var node = new ASTNode(NodeType.ConstantAssignment);
+                node.Children.Add(new ASTNode(NodeType.Identifier, name));
+                node.Children.Add(new ASTNode(NodeType.Value, value));
 
                 return node;
             }
@@ -136,7 +158,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             {
                 var node = new ASTNode(NodeType.Assignment);
 
-                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Identifier, token.Content));
                 Advance(2);
                 node.Children.Add(Walk());
 
@@ -146,13 +168,13 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             // Arithmetic
             if (token.Type == TokenType.Identifier
                 && PeekType(1, TokenType.Plus, TokenType.Minus, TokenType.Asterisc, TokenType.Slash, TokenType.Percent)
-                && PeekType(2, TokenType.Identifier))
+                && PeekType(2, TokenType.Identifier, TokenType.Number))
             {
                 CheckVariable();
 
                 var node = new ASTNode(NodeType.Arithmetic);
 
-                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Identifier, token.Content));
                 Advance();
                 node.Children.Add(new ASTNode(NodeType.Sign, token.Content));
                 Advance();
@@ -274,7 +296,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
                 Consume(TokenType.Comma);
 
                 Consume(TokenType.Identifier, false);
-                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Identifier, token.Content));
 
                 Advance();
                 Consume(TokenType.RightBracket);
@@ -288,7 +310,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             {
                 var node = new ASTNode(NodeType.Shift);
 
-                node.Children.Add(new ASTNode(NodeType.Variable, token.Content));
+                node.Children.Add(new ASTNode(NodeType.Identifier, token.Content));
                 Advance();
 
                 var type = token.Type;
@@ -352,7 +374,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             // Variable
             if (token.Type == TokenType.Identifier)
             {
-                var node = new ASTNode(NodeType.Variable, token.Content);
+                var node = new ASTNode(NodeType.Identifier, token.Content);
                 Advance();
                 return node;
             }

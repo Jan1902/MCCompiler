@@ -23,8 +23,9 @@ namespace CompilerTest.Compiling.Parsing.Models
     internal enum NodeType
     {
         Assignment,
+        ConstantAssignment,
         Value,
-        Variable,
+        Identifier,
         Root,
         Arithmetic,
         Increment,

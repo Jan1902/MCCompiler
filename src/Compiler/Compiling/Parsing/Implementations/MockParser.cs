@@ -14,7 +14,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             {
                 Children = new List<ASTNode>()
                 {
-                    new ASTNode(NodeType.Variable, "a"),
+                    new ASTNode(NodeType.Identifier, "a"),
                     new ASTNode(NodeType.Value, "1")
                 }
             });
@@ -23,7 +23,7 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             {
                 Children = new List<ASTNode>()
                 {
-                    new ASTNode(NodeType.Variable, "b"),
+                    new ASTNode(NodeType.Identifier, "b"),
                     new ASTNode(NodeType.Value, "2")
                 }
             });
@@ -32,14 +32,14 @@ namespace CompilerTest.Compiling.Parsing.Implementations
             {
                 Children = new List<ASTNode>()
                 {
-                    new ASTNode(NodeType.Variable, "c"),
+                    new ASTNode(NodeType.Identifier, "c"),
                     new ASTNode(NodeType.Arithmetic)
                     {
                         Children = new List<ASTNode>()
                         {
-                            new ASTNode(NodeType.Variable, "a"),
+                            new ASTNode(NodeType.Identifier, "a"),
                             new ASTNode(NodeType.Sign, "+"),
-                            new ASTNode(NodeType.Variable, "b")
+                            new ASTNode(NodeType.Identifier, "b")
                         }
                     }
                 }

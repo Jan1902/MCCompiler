@@ -97,6 +97,8 @@ namespace CompilerTest.Compiling.CodeGeneration.RegisterAllocation.Implementatio
 
                     if (currentNode == null)
                     {
+                        currentNode = graph.OrderByDescending(n => n.Connected.Count).FirstOrDefault();
+
                         for (int i = 0; i < instructions.Count; i++)
                         {
                             if (instructions[i].Parameters.Skip(1).Where(p => p is Variable).Select(p => (Variable)p).Contains(currentNode.Variable))

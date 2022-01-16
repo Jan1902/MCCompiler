@@ -5,7 +5,7 @@ namespace CompilerTest.Compiling.CodeGeneration.Intermediate.Transpiling
 {
     internal class URCLIntermediateTranspiler : IIntermediateTranspiler
     {
-        public string[] Transpile(string[] input)
+        public string[] Transpile(string[] input, bool keepCode)
         {
             File.WriteAllLines("tmp.urcl", input);
 
@@ -14,7 +14,9 @@ namespace CompilerTest.Compiling.CodeGeneration.Intermediate.Transpiling
 
             var result = File.ReadAllLines("isa_output.txt");
 
-            File.Delete("tmp.urcl");
+            if(!keepCode)
+                File.Delete("tmp.urcl");
+
             File.Delete("tmp_urcl.urcl");
             File.Delete("isa_output.txt");
 

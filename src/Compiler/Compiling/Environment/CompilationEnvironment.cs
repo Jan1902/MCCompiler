@@ -7,17 +7,19 @@ namespace CompilerTest.Compiling.Environment
 {
     class CompilationEnvironment
     {
-        public ImmutableList<Variable> SystemVariables { get; set; }
+        public List<Variable> ConstantVariables { get; set; }
 
         public List<Variable> CustomVariables { get; set; }
         public Dictionary<string, int> Tags { get; set; }
 
         public CompilationEnvironment()
         {
-            SystemVariables = new List<Variable>
+            ConstantVariables = new List<Variable>
             {
-                new Variable("test", 0, true)
-            }.ToImmutableList();
+                new Variable("DisplayX", 0, true),
+                new Variable("DisplayY", 1, true),
+                new Variable("Text", 2, true)
+            };
 
             CustomVariables = new List<Variable>();
             Tags = new Dictionary<string, int>();
@@ -35,7 +37,16 @@ namespace CompilerTest.Compiling.Environment
 
         public Variable GetVariableByName(string name)
         {
-            return CustomVariables.FirstOrDefault(v => v.Name == name);
+            return CustomVariables.Concat(ConstantVariables).FirstOrDefault(v => v.Name == name);
+        }
+
+        public Variable CreateConstant(string name, int value)
+        {
+            var constant = new Variable(name, value, true);
+
+            ConstantVariables.Add(constant);
+
+            return constant;
         }
 
         public Variable CreateVariable(string name)

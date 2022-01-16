@@ -51,7 +51,9 @@ namespace CompilerTest.Compiling.CodeGeneration.Target
                 for (int i = 0; i < tokens.Count(); i++)
                 {
                     // The value
-                    var param = int.Parse(rawInstruction.Parameters[tokens[i].First() - 97].ToString());
+                    var param = 0;
+                    if(rawInstruction.Parameters.Length > tokens[i].First() - 97)
+                        param = int.Parse(rawInstruction.Parameters[tokens[i].First() - 97].ToString());
 
                     // Convert value to binary
                     var part = Convert.ToString(param, 2).PadLeft(tokens[i].Length, '0');

@@ -2,6 +2,6 @@
 {
     internal interface IIntermediateTranspiler
     {
-        string[] Transpile(string[] input);
+        string[] Transpile(string[] input, bool keepCode);
     }
 }

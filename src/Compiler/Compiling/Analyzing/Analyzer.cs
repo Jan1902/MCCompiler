@@ -8,6 +8,7 @@ namespace CompilerTest.Compiling.Analyzing
         private List<NodeType> validTopLevelNodes = new List<NodeType>()
         {
             NodeType.Assignment,
+            NodeType.ConstantAssignment,
             NodeType.Output,
             NodeType.ConditionalStatement,
             NodeType.Halt,
@@ -20,7 +21,7 @@ namespace CompilerTest.Compiling.Analyzing
             NodeType.Increment,
             NodeType.Decrement,
             NodeType.Input,
-            NodeType.Variable,
+            NodeType.Identifier,
             NodeType.Value,
             NodeType.Shift
         };

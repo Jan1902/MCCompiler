@@ -51,7 +51,7 @@ namespace CompilerTest.Components.Implementations
 
         private IParser ChooseParser()
         {
-            return new Parser();
+            return new NewParser();
         }
 
         private IAnalyzer ChooseAnalyzer()

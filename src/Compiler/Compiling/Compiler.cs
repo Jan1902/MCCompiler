@@ -38,7 +38,7 @@ namespace CompilerTest.Compiling
             var output = intermediateTranslator.Translate(instructions);
 
             IIntermediateTranspiler intermediateTranspiler = _componentProvider.IntermediateTranspiler;
-            output = intermediateTranspiler.Transpile(output);
+            output = intermediateTranspiler.Transpile(output, true);
 
             IIntermediateParser intermediateParser = _componentProvider.IntermediateParser;
             instructions = intermediateParser.Parse(output);

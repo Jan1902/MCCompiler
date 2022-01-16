@@ -32,7 +32,8 @@ namespace CompilerTest.Compiling.Tokenizing.Implementations
             "input",
             "output",
             "halt",
-            "func"
+            "func",
+            "const"
         };
 
         public Token[] Tokenize(string code)
