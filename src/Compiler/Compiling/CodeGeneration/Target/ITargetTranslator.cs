@@ -1,10 +1,9 @@
 ﻿using CompilerTest.Compiling.Transformation.Models;
 using System.Collections.Generic;
 
-namespace CompilerTest.Compiling.CodeGeneration.Target
+namespace CompilerTest.Compiling.CodeGeneration.Target;
+
+internal interface ITargetTranslator
 {
-    internal interface ITargetTranslator
-    {
-        string[] Translate(List<IntermediateInstruction> instructions);
-    }
+    string[] Translate(List<IntermediateInstruction> instructions);
 }

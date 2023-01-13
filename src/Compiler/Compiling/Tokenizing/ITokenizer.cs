@@ -1,9 +1,8 @@
 ﻿using CompilerTest.Compiling.Tokenizing.Models;
 
-namespace CompilerTest.Compiling.Tokenizing
+namespace CompilerTest.Compiling.Tokenizing;
+
+internal interface ITokenizer
 {
-    internal interface ITokenizer
-    {
-        Token[] Tokenize(string code);
-    }
+    Token[] Tokenize(string code);
 }

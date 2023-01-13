@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MCCompiler.Compiler.Abstraction\MCCompiler.Compiler.Abstraction.csproj" />
+    <ProjectReference Include="..\MCCompiler.Compiler.Analyzer\MCCompiler.Compiler.Analyzer.csproj" />
+    <ProjectReference Include="..\MCCompiler.Compiler.Lexer\MCCompiler.Compiler.Lexer.csproj" />
+    <ProjectReference Include="..\MCCompiler.Compiler.Parser\MCCompiler.Compiler.Parser.csproj" />
+    <ProjectReference Include="..\MCCompiler.Shared\MCCompiler.Compiler.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

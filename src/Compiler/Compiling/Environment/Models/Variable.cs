@@ -1,41 +1,40 @@
-﻿namespace CompilerTest.Compiling.Environment.Models
+﻿namespace CompilerTest.Compiling.Environment.Models;
+
+class Variable
 {
-    class Variable
+    public string Name { get; set; }
+    public int Value { get; set; }
+    public bool ReadOnly { get; set; }
+    public int RegisterAddress { get; set; }
+    public int RAMAddress { get; set; }
+
+    public Variable(string name, bool readOnly, int address)
     {
-        public string Name { get; set; }
-        public int Value { get; set; }
-        public bool ReadOnly { get; set; }
-        public int RegisterAddress { get; set; }
-        public int RAMAddress { get; set; }
+        Name = name;
+        ReadOnly = readOnly;
+        RegisterAddress = address;
+    }
 
-        public Variable(string name, bool readOnly, int address)
-        {
-            Name = name;
-            ReadOnly = readOnly;
-            RegisterAddress = address;
-        }
+    public Variable(string name, int value, bool readOnly)
+    {
+        Name = name;
+        Value = value;
+        ReadOnly = readOnly;
+    }
 
-        public Variable(string name, int value, bool readOnly)
-        {
-            Name = name;
-            Value = value;
-            ReadOnly = readOnly;
-        }
+    public Variable()
+    {
 
-        public Variable()
-        {
+    }
 
-        }
+    public override bool Equals(object obj)
+    {
+        if (obj == null)
+            return false;
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-                return false;
+        if (obj.GetType() != typeof(Variable))
+            return false;
 
-            if (obj.GetType() != typeof(Variable))
-                return false;
-
-            return ((Variable)obj).Name == Name;
-        }
+        return ((Variable)obj).Name == Name;
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace CompilerTest.Compiling
+﻿namespace CompilerTest.Compiling;
+
+internal interface ICompiler
 {
-    internal interface ICompiler
-    {
-        string[] Compile(string code);
-    }
+    string[] Compile(string code);
 }

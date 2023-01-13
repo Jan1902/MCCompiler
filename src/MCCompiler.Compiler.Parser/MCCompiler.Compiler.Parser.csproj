@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MCCompiler.Compiler.Abstraction\MCCompiler.Compiler.Abstraction.csproj" />
+    <ProjectReference Include="..\MCCompiler.Shared\MCCompiler.Compiler.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

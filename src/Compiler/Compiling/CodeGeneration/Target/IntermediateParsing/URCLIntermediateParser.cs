@@ -5,46 +5,45 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CompilerTest.Compiling.CodeGeneration.Target.IntermediateParsing
+namespace CompilerTest.Compiling.CodeGeneration.Target.IntermediateParsing;
+
+internal class URCLIntermediateParser : IIntermediateParser
 {
-    internal class URCLIntermediateParser : IIntermediateParser
+    private readonly CompilationEnvironment _compilationEnvironment;
+
+    public URCLIntermediateParser(CompilationEnvironment compilationEnvironment)
     {
-        private readonly CompilationEnvironment _compilationEnvironment;
+        _compilationEnvironment = compilationEnvironment;
+    }
 
-        public URCLIntermediateParser(CompilationEnvironment compilationEnvironment)
+    public List<IntermediateInstruction> Parse(string[] input)
+    {
+        var instructions = new List<IntermediateInstruction>();
+        foreach (var line in input)
         {
-            _compilationEnvironment = compilationEnvironment;
-        }
+            var instruction = new IntermediateInstruction();
+            var parts = line.Replace(",", "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        public List<IntermediateInstruction> Parse(string[] input)
-        {
-            var instructions = new List<IntermediateInstruction>();
-            foreach (var line in input)
+            instruction.Operation = (Operations)Enum.Parse(typeof(Operations), parts[0]);
+
+            var parameters = new List<object>();
+            foreach (var param in parts.Skip(1))
             {
-                var instruction = new IntermediateInstruction();
-                var parts = line.Replace(",", "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-                instruction.Operation = (Operations)Enum.Parse(typeof(Operations), parts[0]);
-
-                var parameters = new List<object>();
-                foreach (var param in parts.Skip(1))
+                if(param.StartsWith("$"))
                 {
-                    if(param.StartsWith("$"))
-                    {
-                        var variable = _compilationEnvironment.GetOrCreateVariable(param[1..]);
-                        parameters.Add(variable);
-                        continue;
-                    }
-
-                    parameters.Add(param);
+                    var variable = _compilationEnvironment.GetOrCreateVariable(param[1..]);
+                    parameters.Add(variable);
+                    continue;
                 }
 
-                instruction.Parameters = parameters.ToArray();
-
-                instructions.Add(instruction);
+                parameters.Add(param);
             }
 
-            return instructions;
+            instruction.Parameters = parameters.ToArray();
+
+            instructions.Add(instruction);
         }
+
+        return instructions;
     }
 }

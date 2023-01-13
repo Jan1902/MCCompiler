@@ -1,9 +1,8 @@
 ﻿using SchematicCreator.Configuration;
 
-namespace SchematicCreator.Generators
+namespace SchematicCreator.Generators;
+
+internal interface IGeneratorProvider
 {
-    internal interface IGeneratorProvider
-    {
-        IGenerator GetGenerator(MemoryConfiguration configuration);
-    }
+    IGenerator GetGenerator(MemoryConfiguration configuration);
 }

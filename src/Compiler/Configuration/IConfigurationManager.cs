@@ -1,9 +1,8 @@
-﻿namespace CompilerTest.Configuration
-{
-    internal interface IConfigurationManager
-    {
-        CPUConfiguration Configuration { get; }
+﻿namespace CompilerTest.Configuration;
 
-        void Load(string path);
-    }
+internal interface IConfigurationManager
+{
+    CPUConfiguration Configuration { get; }
+
+    void Load(string path);
 }

@@ -1,9 +1,8 @@
-﻿namespace SchematicCreator.Configuration
-{
-    internal interface IConfigurationManager
-    {
-        MemoryConfiguration Configuration { get; }
+﻿namespace SchematicCreator.Configuration;
 
-        void Load();
-    }
+internal interface IConfigurationManager
+{
+    MemoryConfiguration Configuration { get; }
+
+    void Load();
 }

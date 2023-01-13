@@ -1,7 +1,6 @@
-﻿namespace SchematicCreator.Parsing
+﻿namespace SchematicCreator.Parsing;
+
+internal interface IParser
 {
-    internal interface IParser
-    {
-        bool[,] Parse(string[] content);
-    }
+    bool[,] Parse(string[] content);
 }

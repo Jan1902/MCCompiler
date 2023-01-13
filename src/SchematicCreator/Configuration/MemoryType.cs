@@ -1,8 +1,7 @@
-﻿namespace SchematicCreator.Configuration
+﻿namespace SchematicCreator.Configuration;
+
+internal enum MemoryType
 {
-    internal enum MemoryType
-    {
-        Binary,
-        Hex
-    }
+    Binary,
+    Hex
 }

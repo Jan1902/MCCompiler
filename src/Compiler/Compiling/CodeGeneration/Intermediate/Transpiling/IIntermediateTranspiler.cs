@@ -1,7 +1,6 @@
-﻿namespace CompilerTest.Compiling.CodeGeneration.Intermediate.Transpiling
+﻿namespace CompilerTest.Compiling.CodeGeneration.Intermediate.Transpiling;
+
+internal interface IIntermediateTranspiler
 {
-    internal interface IIntermediateTranspiler
-    {
-        string[] Transpile(string[] input, bool keepCode);
-    }
+    string[] Transpile(string[] input, bool keepCode);
 }

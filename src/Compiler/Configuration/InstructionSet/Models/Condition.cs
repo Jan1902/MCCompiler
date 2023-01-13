@@ -1,23 +1,22 @@
 ﻿using CompilerTest.Compiling.Transformation.Enums;
 using System.Text.Json.Serialization;
 
-namespace CompilerTest.Compiling.InstructionSet.Models
+namespace CompilerTest.Configuration.InstructionSet.Models;
+
+public class Condition
 {
-    public class Condition
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public Conditions ConditionType { get; set; }
+    public int OPCode { get; set; }
+
+    public Condition(Conditions conditionType, int oPCode)
     {
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Conditions ConditionType { get; set; }
-        public int OPCode { get; set; }
+        ConditionType = conditionType;
+        OPCode = oPCode;
+    }
 
-        public Condition(Conditions conditionType, int oPCode)
-        {
-            ConditionType = conditionType;
-            OPCode = oPCode;
-        }
+    public Condition()
+    {
 
-        public Condition()
-        {
-
-        }
     }
 }

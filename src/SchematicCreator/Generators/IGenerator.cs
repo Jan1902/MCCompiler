@@ -1,9 +1,8 @@
 ﻿using fNbt;
 
-namespace SchematicCreator.Generators
+namespace SchematicCreator.Generators;
+
+internal interface IGenerator
 {
-    internal interface IGenerator
-    {
-        NbtCompound Generate(bool[,] binary);
-    }
+    NbtCompound Generate(bool[,] binary);
 }

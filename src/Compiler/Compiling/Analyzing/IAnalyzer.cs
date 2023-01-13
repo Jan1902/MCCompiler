@@ -1,9 +1,8 @@
 ﻿using CompilerTest.Compiling.Parsing.Models;
 
-namespace CompilerTest.Compiling.Analyzing
+namespace CompilerTest.Compiling.Analyzing;
+
+internal interface IAnalyzer
 {
-    internal interface IAnalyzer
-    {
-        ASTNode AnalyzeAndCleanUp(ASTNode ast);
-    }
+    ASTNode AnalyzeAndCleanUp(ASTNode ast);
 }

@@ -1,10 +1,9 @@
 ﻿using CompilerTest.Compiling.Transformation.Models;
 using System.Collections.Generic;
 
-namespace CompilerTest.Compiling.CodeGeneration.RegisterAllocation
+namespace CompilerTest.Compiling.CodeGeneration.RegisterAllocation;
+
+internal interface IRegisterAllocator
 {
-    internal interface IRegisterAllocator
-    {
-        List<IntermediateInstruction> AllocateRegisters(List<IntermediateInstruction> instructions);
-    }
+    List<IntermediateInstruction> AllocateRegisters(List<IntermediateInstruction> instructions);
 }

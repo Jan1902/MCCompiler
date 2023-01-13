@@ -9,19 +9,18 @@ using CompilerTest.Compiling.Parsing;
 using CompilerTest.Compiling.Tokenizing;
 using CompilerTest.Compiling.Transformation;
 
-namespace CompilerTest.Components
+namespace CompilerTest.Components;
+
+internal interface IComponentProvider
 {
-    internal interface IComponentProvider
-    {
-        ICompiler Compiler { get; }
-        ITokenizer Tokenizer { get; }
-        IParser Parser { get; }
-        IAnalyzer Analyzer { get; }
-        ITransformer Transformer { get; }
-        IIntermediateTranslator IntermediateTranslator { get; }
-        IIntermediateTranspiler IntermediateTranspiler { get; }
-        IIntermediateParser IntermediateParser { get; }
-        ITargetTranslator TargetTranslator { get; }
-        IRegisterAllocator RegisterAllocator { get; }
-    }
+    ICompiler Compiler { get; }
+    ITokenizer Tokenizer { get; }
+    IParser Parser { get; }
+    IAnalyzer Analyzer { get; }
+    ITransformer Transformer { get; }
+    IIntermediateTranslator IntermediateTranslator { get; }
+    IIntermediateTranspiler IntermediateTranspiler { get; }
+    IIntermediateParser IntermediateParser { get; }
+    ITargetTranslator TargetTranslator { get; }
+    IRegisterAllocator RegisterAllocator { get; }
 }
