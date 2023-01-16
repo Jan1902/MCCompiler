@@ -1,8 +1,10 @@
 ﻿using System.Text.RegularExpressions;
+using MCCompiler.Compiler.Abstraction;
+using MCCompiler.Compiler.Shared;
 
 namespace MCCompiler.Compiler.Lexer.Implementations;
 
-internal class Tokenizer : ITokenizer
+public class Tokenizer : ITokenizer
 {
     private Dictionary<char, TokenType> knownCharacters = new Dictionary<char, TokenType>()
     {
@@ -33,7 +35,7 @@ internal class Tokenizer : ITokenizer
         "const"
     };
 
-    public Token[] Tokenize(string code)
+    public IEnumerable<Token> Tokenize(string code)
     {
         var current = 0;
         var line = 1;

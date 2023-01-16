@@ -4,5 +4,5 @@ namespace MCCompiler.Compiler.Abstraction;
 
 public interface ITokenizer
 {
-    Token[] Tokenize(string code);
+    IEnumerable<Token> Tokenize(string code);
 }

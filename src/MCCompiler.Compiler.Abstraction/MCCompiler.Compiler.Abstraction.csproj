@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MCCompiler.Shared\MCCompiler.Compiler.Shared.csproj" />
+    <ProjectReference Include="..\MCCompiler.Compiler.Shared\MCCompiler.Compiler.Shared.csproj" />
   </ItemGroup>
 
 </Project>

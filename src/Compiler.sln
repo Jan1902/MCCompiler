@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCCompiler.Compiler.Lexer",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCCompiler.Compiler.Shared", "MCCompiler.Compiler.Shared\MCCompiler.Compiler.Shared.csproj", "{75D0046C-80B8-4F3F-A1AB-A6AF13376425}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCCompiler.Console", "MCCompiler.Console\MCCompiler.Console.csproj", "{C454BF64-32D4-49F4-9AA2-CFE7EA82E60A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCCompiler.CLI", "MCCompiler.CLI\MCCompiler.CLI.csproj", "{C454BF64-32D4-49F4-9AA2-CFE7EA82E60A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCCompiler.Compiler.Parser", "MCCompiler.Compiler.Parser\MCCompiler.Compiler.Parser.csproj", "{400FB4DE-20EA-4D0A-A519-647854723591}"
 EndProject

@@ -15,4 +15,9 @@
     <ProjectReference Include="..\MCCompiler.Shared\MCCompiler.Compiler.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+  </ItemGroup>
+
 </Project>
