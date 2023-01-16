@@ -4,5 +4,5 @@ namespace MCCompiler.Compiler.Abstraction;
 
 public interface IParser
 {
-    ASTNode Parse(Token[] tokens);
+    ASTNode Parse(IEnumerable<Token> tokens);
 }

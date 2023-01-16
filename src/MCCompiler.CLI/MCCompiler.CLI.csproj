@@ -12,7 +12,7 @@
     <ProjectReference Include="..\MCCompiler.Compiler.Analyzer\MCCompiler.Compiler.Analyzer.csproj" />
     <ProjectReference Include="..\MCCompiler.Compiler.Lexer\MCCompiler.Compiler.Lexer.csproj" />
     <ProjectReference Include="..\MCCompiler.Compiler.Parser\MCCompiler.Compiler.Parser.csproj" />
-    <ProjectReference Include="..\MCCompiler.Shared\MCCompiler.Compiler.Shared.csproj" />
+    <ProjectReference Include="..\MCCompiler.Compiler.Shared\MCCompiler.Compiler.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

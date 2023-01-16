@@ -1,6 +1,4 @@
-﻿using CompilerTest.Compiling.Transformation.Enums;
-
-namespace CompilerTest.Compiling.Transformation.Models;
+﻿namespace CompilerTest.Compiling.Transformation.Models;
 
 internal class IntermediateInstruction
 {

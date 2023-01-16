@@ -6,7 +6,7 @@ public class ASTNode
     public string? Value { get; init; }
     public List<ASTNode> Children { get; init; }
 
-    public ASTNode(NodeType type, string value)
+    public ASTNode(NodeType type, string? value)
     {
         Type = type;
         Value = value;

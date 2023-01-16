@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MCCompiler.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "build -s Bresenham.txt -o \"result.txt\" -c \"config.txt\""
+    }
+  }
+}

@@ -3,9 +3,9 @@ using MCCompiler.Compiler.Shared;
 
 namespace MCCompiler.Compiler.Parser.Implementations;
 
-internal class MockParser : IParser
+public class MockParser : ParserBase, IParser
 {
-    public ASTNode Parse(Token[] tokens)
+    public ASTNode Parse(IEnumerable<Token> _)
     {
         var ast = new ASTNode(NodeType.Root);
 
